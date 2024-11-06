@@ -1,0 +1,88 @@
+.centrar_numero{
+    justify-content: center; /* Centra horizontalmente */
+  align-items: center;
+}
+.separacion{
+    gap: 8rem; ;
+}
+.flex { 
+    display: flex; 
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .justify-between {
+    justify-content: center;
+  }
+  
+  .bg-background {
+    background-color: #f9fafb; /* O el color de fondo que prefieras */
+  }
+  
+  .p-4 {
+    padding: 1rem; 
+  }
+  
+  .w-8 {
+    width: 2rem; 
+  }
+  
+  .h-8 {
+    height: 2rem;
+  }
+  
+  .rounded-full {
+    border-radius: 9999px;
+  }
+  
+  .ml-2 {
+    margin-left: 0.5rem;
+  }
+  
+  .font-semibold {
+    font-weight: 600;
+  }
+  
+  /* Colores de fondo */
+  .bg-primary {
+    background-color: #007bff; /* Azul */
+  }
+  
+  .bg-secondary {
+    background-color: #6c757d; /* Gris */
+  }
+  
+  .bg-accent {
+    background-color: #28a745; /* Verde */
+  }
+  
+  /* Colores de texto */
+  .text-primary-foreground {
+    color: white;
+  }
+  
+  .text-secondary-foreground {
+    color: white;
+  }
+  
+  .text-accent-foreground {
+    color: white;
+  }
+  
+  /* Colores de texto */
+  .text-primary {
+    color: #007bff;
+  }
+  
+  .text-secondary {
+    color: #6c757d;
+  }
+  
+  .text-accent {
+    color: #28a745;
+  }
+  
+  /* Efectos al pasar el mouse */
+ 
