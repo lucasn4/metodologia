@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from "react";
 import "../assets/styles/comp_pago.css"; // Importa el archivo CSS
 // ResponsiveLayout.jsx
+import Estado from "./comp-pago-2"
 
 
 
 const MetodoPago = ({ items }) => {
     const [metodoPago, setMetodoPago] = useState("");
 
-    const handleMetodoPagoChange = (event) => {
-      setMetodoPago(event.target.value);
-    };
-  
-    useEffect(() => {
-      const inputFile = document.getElementById('upload-file');
-      const fileChosen = document.getElementById('file-chosen');
-  
-      if (inputFile) {
-        inputFile.addEventListener('change', () => {
-          fileChosen.textContent = inputFile.files[0].name;
-        });
-      }
-    }, []);
+  const handleMetodoPagoChange = (event) => {
+    setMetodoPago(event.target.value);
+  };
+
+  const [mostrarEstado, setMostrarEstado] = useState(false); // Corrección: 'const' en lugar de 'onst'
+
+  const handleClickEnviar = () => {
+    setMostrarEstado(true);
+  };
+
+  useEffect(() => {
+    const inputFile = document.getElementById('upload-file');
+    const fileChosen = document.getElementById('file-chosen');
+
+    if (inputFile) {
+      inputFile.addEventListener('change', () => {
+        fileChosen.textContent = inputFile.files[0].name;
+      });
+    }
+  }, []);
+  if (mostrarEstado) { // Si mostrarEstado es true, renderiza solo el componente Estado
+    return <Estado />;
+  }
   return (
     <div className="caja_de_pagos_carrito">
       <div className="metodo-pago-container">
@@ -104,10 +114,13 @@ const MetodoPago = ({ items }) => {
 
       </div>
       
-      <button className="enviar-button">Enviar</button> 
+      <button className="enviar-button" onClick={handleClickEnviar}>Enviar</button> 
 
+
+
+      
     </div>
-  );
+  )
 };
 
 const ResponsiveLayout = () => {
