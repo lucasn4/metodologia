@@ -224,7 +224,7 @@
   .header {
     color: var(--default-color);
     background-color: #DCBCA0;
-    padding: 15px 0;
+    padding: 0 0;
     transition: all 0.5s;
     z-index: 997;
   }
@@ -524,6 +524,14 @@
   /*--------------------------------------------------------------
   # Global Footer
   --------------------------------------------------------------*/
+  #footerid{
+    justify-content: space-between;
+  }
+  
+  #iniciosesionempleados{
+    margin-right: 10%;
+    margin-top: 3%;
+  }
   .footer {
     color: var(--default-color);
     background-color: var(--background-color);
@@ -818,7 +826,7 @@
   .section {
     color: var(--default-color);
     background-color: #DCBCA0;
-    padding: 60px 0;
+    padding: 40px 0;
     scroll-margin-top: 900px;
     overflow: clip;
   }

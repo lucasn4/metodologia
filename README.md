@@ -1,3 +1,6 @@
+SAMAYKITI.sql es la base de datos eso no va en la carpeta
+
+
 # Extensiones a instalar
 npm install ..
 
@@ -7,3 +10,9 @@ npm install ..
 - glightbox
 - swiper
 - aos
+- express
+- mysql2
+- body-parser
+- cors
+- react-calendar 
+- axios

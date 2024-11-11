@@ -1,0 +1,58 @@
+import React, { useState } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
+const RangoCalendario = () => {
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [dateRange, setDateRange] = useState('');
+
+  const handleDateClick = (date) => {
+    if (selectedDates.length < 2) {
+      const newDates = [...selectedDates, date];
+      setSelectedDates(newDates);
+
+      // Actualiza el input cuando se seleccionan dos fechas
+      if (newDates.length === 2) {
+        const formattedDates = newDates
+          .map((date) => date.toLocaleDateString('es-ES'))
+          .join(' / ');
+        setDateRange(`(${formattedDates})`);
+      }
+    } else {
+      // Reinicia las fechas seleccionadas al seleccionar una tercera fecha
+      setSelectedDates([date]);
+      setDateRange('');
+    }
+  };
+
+  const tileClassName = ({ date }) => {
+    // Asigna la clase 'selected' a las fechas seleccionadas
+    return selectedDates.some(
+      (selectedDate) =>
+        selectedDate.toDateString() === date.toDateString()
+    )
+      ? 'selected'
+      : null;
+  };
+
+  return (
+    <div>
+      <Calendar
+        onClickDay={handleDateClick}
+        tileClassName={tileClassName}
+      />
+      <input type="text" value={dateRange} readOnly />
+      <style>
+        {`
+          .react-calendar__tile.selected {
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+          }
+        `}
+      </style>
+    </div>
+  );
+};
+
+export default RangoCalendario;
