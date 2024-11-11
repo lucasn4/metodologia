@@ -9,6 +9,10 @@ import AOS from 'aos';
 import { useEffect } from 'react';
 import Map from './mapa.jsx';
 import { Imagen1, Imagen2, Imagen3, Imagen4, Imagen5, Imagen6, Imagen7, Imagen8, Imagen9, Imagen10, Imagen11, Imagen12, Imagen13, Imagen14 } from '../assets/imagenes/img-js/imgs.js'
+import { Link } from 'react-router-dom';
+import Header from './header.jsx'
+import Footer from './footer.jsx'
+//import Header from './header.jsx'
 
 export const principal = () => {
   useEffect(() => {
@@ -16,25 +20,7 @@ export const principal = () => {
   }, []);
   return (
   <>
-    <header id="header" className="header d-flex align-items-center sticky-top">
-        <div className="container-fluid container-xl position-relative d-flex align-items-center">
-          <a href="index.html" className="logo d-flex align-items-center me-auto" id='tituloh1'>
-            <h1 className="sitename">Samay Kiti</h1>
-          </a>
-          <nav id="navmenu" className="navmenu">
-            <ul>
-            <li><a href="#">Home</a></li>
-              <li><a href="about.html">PAGINA</a></li>
-              <li><a href="courses.html">PAGINA</a></li>
-              <li><a href="trainers.html">PAGINA</a></li>
-              <li><a href="contact.html">PAGINA</a></li>
-            </ul>
-            <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
-          </nav>
-          <a className="btn-getstarted" href="courses.html">Iniciar Sesion</a>
-        </div>
-      </header>
-
+      <Header />
       {/* Hero Section */}
       <section id="hero" className="hero section dark-background">
         <img id="imagencentral" src={Imagen14} alt="" />
@@ -47,7 +33,11 @@ export const principal = () => {
           </div>
           <p data-aos="fade-up" data-aos-delay="300">Tu refugio en el corazón de Amaicha del Valle</p>
           <div className="d-flex mt-4" data-aos="fade-up" data-aos-delay="400">
-            <a href="courses.html" className="btn-get-started">Reservar</a>
+              <Link to="/registro" className='a'>
+                <p className='btn-get-started'>Reservar</p>
+              </Link>
+            
+            {/*<a href="courses.html" className="btn-get-started">Reservar</a>*/}
           </div>
         </div>
       </section>
@@ -81,7 +71,7 @@ export const principal = () => {
         <div className="row gy-4">
           <div className="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div className="why-box">
-              <h3>¿Por qué elegir Samay Kiti?</h3>
+              <h3 >¿Por qué elegir Samay Kiti?</h3>
               <p>
                 Ubicado en el encantador Amaicha del Valle, Samay Kiti te ofrece un rincón de nuestro hostal que refleja la rica herencia de la región, creando un ambiente acogedor y auténtico.
                 <br /><br />
@@ -145,130 +135,8 @@ export const principal = () => {
         </div>
       </section>
 
-      {/* Trainers Index Section */}
-      <section id="trainers-index" className="section trainers-index">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
-              <div className="member">
-                <img src="assets/img/trainers/trainer-1.jpg" className="img-fluid" alt="Walter White" />
-                <div className="member-content">
-                  <h4>Walter White</h4>
-                  <span>Web Development</span>
-                  <p>
-                    Magni qui quod omnis unde et eos fuga et exercitationem. Odio veritatis perspiciatis quaerat qui aut aut aut
-                  </p>
-                  <div className="social">
-                    <a href="#"><i className="bi bi-twitter-x"></i></a>
-                    <a href="#"><i className="bi bi-facebook"></i></a>
-                    <a href="#"><i className="bi bi-instagram"></i></a>
-                    <a href="#"><i className="bi bi-linkedin"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* End Team Member */}
 
-            <div className="col-lg-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
-              <div className="member">
-                <img src="assets/img/trainers/trainer-2.jpg" className="img-fluid" alt="Sarah Jhinson" />
-                <div className="member-content">
-                  <h4>Sarah Jhinson</h4>
-                  <span>Marketing</span>
-                  <p>
-                    Repellat fugiat adipisci nemo illum nesciunt voluptas repellendus. In architecto rerum rerum temporibus
-                  </p>
-                  <div className="social">
-                    <a href="#"><i className="bi bi-twitter-x"></i></a>
-                    <a href="#"><i className="bi bi-facebook"></i></a>
-                    <a href="#"><i className="bi bi-instagram"></i></a>
-                    <a href="#"><i className="bi bi-linkedin"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* End Team Member */}
-
-            <div className="col-lg-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
-              <div className="member">
-                <img src="assets/img/trainers/trainer-3.jpg" className="img-fluid" alt="William Anderson" />
-                <div className="member-content">
-                  <h4>William Anderson</h4>
-                  <span>Content</span>
-                  <p>
-                    Voluptas necessitatibus occaecati quia. Earum totam consequuntur qui porro et laborum toro des clara
-                  </p>
-                  <div className="social">
-                    <a href="#"><i className="bi bi-twitter-x"></i></a>
-                    <a href="#"><i className="bi bi-facebook"></i></a>
-                    <a href="#"><i className="bi bi-instagram"></i></a>
-                    <a href="#"><i className="bi bi-linkedin"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* End Team Member */}
-          </div>
-        </div>
-      </section>
-      {/* /Trainers Index Section */}
-
-      <footer id="footer" className="footer position-relative light-background">
-        <div className="container footer-top">
-          <div className="row gy-4">
-            <div className="col-lg-4 col-md-6 footer-about">
-              <a href="index.html" className="logo d-flex align-items-center">
-                <span className="sitename">SAMAY KITI</span>
-              </a>
-              <div className="footer-contact pt-3">
-                <p>Hipolito Yrigoyen s/n</p>
-                <p>Amaicha del Valle, Tucuman</p>
-                <p className="mt-3"><strong>Telefonos:</strong> <span>+54 9 381 648-9834 // 381 647-0160</span></p>
-                <p><strong>Email:</strong> <span>-</span></p>
-              </div>
-              <div className="social-links d-flex mt-4">
-                <a href="#"><i className="bi bi-twitter-x"></i></a>
-                <a href="#"><i className="bi bi-facebook"></i></a>
-                <a href="#"><i className="bi bi-instagram"></i></a>
-                <a href="#"><i className="bi bi-linkedin"></i></a>
-              </div>
-            </div>
-
-            <div className="col-lg-2 col-md-3 footer-links">
-              <h4>Otras Paginas</h4>
-              <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">PAGINA</a></li>
-                <li><a href="#">PAGINA</a></li>
-                <li><a href="#">PAGINA</a></li>
-                <li><a href="#">PAGINA</a></li>
-              </ul>
-            </div>
-
-
-            <div className="col-lg-4 col-md-12 footer-newsletter">
-              <h4>Our Newsletter</h4>
-              <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
-              <form action="forms/newsletter.php" method="post" className="php-email-form">
-                <div className="newsletter-form">
-                  <input type="email" name="email" placeholder="Your Email" required />
-                  <input type="submit" value="Subscribe" />
-                </div>
-                <div className="loading">Loading</div>
-                <div className="error-message"></div>
-                <div className="sent-message">Your subscription request has been sent. Thank you!</div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <div className="container copyright text-center mt-4">
-          <p>© <span>Copyright</span> <strong className="px-1 sitename">Samay kiti</strong> <span>Todos los Derechos Reservados.</span></p>
-          <div className="credits">
-            Diseñado por <strong className="px-1 sitename">Grupo 7 - Comisión 7.</strong>
-          </div>
-        </div>
-      </footer>
+      <Footer /> 
 
       {/* Scroll Top */}
       <a href="#" id="scroll-top" className="scroll-top d-flex align-items-center justify-content-center"><i className="bi bi-arrow-up-short"></i></a>
