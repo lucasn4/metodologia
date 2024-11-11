@@ -1,3 +1,6 @@
+SAMAYKITI.sql es la base de datos eso no va en la carpeta
+
+
 # Extensiones a instalar
 npm install ..
 
