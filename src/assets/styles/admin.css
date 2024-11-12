@@ -1,0 +1,170 @@
+/* admin.css - Tema oscuro y responsivo */
+
+/* Variables de tema oscuro */
+:root {
+  --background-color: #121212;
+  --card-bg-color: #333;
+  --text-color: #fff;
+  --secondary-text-color: #b3b3b3;
+  --highlight-color: #1f8ef1;
+  --hover-color: #444;
+  --button-bg-color: #4a4a4a;
+  --button-hover-color: #666;
+  --border-color: #2a2a2a;
+}
+
+/* Contenedor principal */
+.home-container {
+  padding: 20px;
+  background-color: var(--background-color);
+  min-height: 100vh;
+}
+
+/* Títulos */
+.title {
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Grid de tarjetas */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+  margin-right: 10px;
+}
+
+.card-ticket {
+  background: var(--card-bg-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-ticket:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Sección de notificaciones */
+.notification-section {
+  background-color: #1a1a1a;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+/* Encabezado de la tabla */
+.table-header {
+  background-color: var(--hover-color);
+  padding: 16px;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.table-header h5 {
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+/* Tarjetas de solicitudes */
+.request-card {
+  background-color: var(--card-bg-color);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 8px;
+}
+
+.request-card:hover {
+  background-color: var(--hover-color);
+}
+
+/* Botón del menú */
+.menu-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--button-bg-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.menu-button:hover {
+  background-color: var(--button-hover-color);
+}
+
+/* Elementos del menú */
+.menu-item a {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.menu-item a:hover {
+  background-color: var(--hover-color);
+}
+
+/* Media queries para adaptabilidad */
+
+/* Móviles */
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .table-header {
+    display: none; /* Ocultar en móviles */
+  }
+
+  .request-card {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+}
+
+/* Tablets y pantallas medianas */
+@media (min-width: 768px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .table-header {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .request-card {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Pantallas grandes */
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .card-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
