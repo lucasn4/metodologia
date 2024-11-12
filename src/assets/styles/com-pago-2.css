@@ -1,0 +1,11 @@
+.centrar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center; /* Centrado vertical */
+}
+
+
+.margenes{
+    margin-top: 20px;
+}

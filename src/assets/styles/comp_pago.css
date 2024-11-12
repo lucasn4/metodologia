@@ -1,0 +1,131 @@
+/* ResponsiveLayout.css */
+.layout-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left-section {
+  flex: 2;
+  min-height: 600px;
+  border: 2px dashed #ccc;
+  padding: 15px;
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.top-box,
+.bottom-box {
+  border: 2px dashed #ccc;
+  padding: 15px;
+  min-height: 290px;
+}
+
+.content-box {
+  height: 100%;
+}
+
+/* Estilos responsive */
+@media (max-width: 768px) {
+  .layout-container {
+    flex-direction: column;
+  }
+
+  .left-section {
+    min-height: 400px;
+  }
+
+  .right-section {
+    width: 100%;
+  }
+
+  .top-box,
+  .bottom-box {
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-container {
+    padding: 10px;
+  }
+
+  .left-section {
+    min-height: 300px;
+  }
+
+  .top-box,
+  .bottom-box {
+    min-height: 150px;
+  }
+}
+
+/* Estilos adicionales para visualización */
+h2, h3 {
+  margin: 0;
+  padding: 10px 0;
+}
+
+p {
+  margin: 0;
+}
+
+
+/* ... (CSS del botón anterior) ... */
+.file-upload {
+  display: flex; /* Usamos Flexbox para el diseño */
+  align-items: center; /* Alineamos los elementos verticalmente al centro */
+  border: 2px solid #0d6efd; /* Color del borde */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+.file-upload input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 50%; /* Centramos horizontalmente */
+  transform: translateX(-50%); /* Ajustamos la posición horizontal */
+  width: 100px; /* Ajusta el ancho del input */
+  height: 40px; /* Ajusta el alto del input */
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-upload label {
+  display: block;
+  padding: 10px 20px;
+  background-color: #0d6efd; /* Color de fondo del botón */
+  color: #fff; /* Color del texto del botón */
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+}
+
+#file-chosen {
+  margin-right: 10px; /* Espacio entre el texto y el botón */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Para que sea responsive */
+@media (max-width: 768px) {
+  .file-upload {
+    width: 100%; /* Ajusta el ancho en pantallas pequeñas */
+  }
+}
+
+
+
+.espacio{
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+}

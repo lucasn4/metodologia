@@ -1,0 +1,278 @@
+.centrar_numero{
+    justify-content: center; /* Centra horizontalmente */
+  align-items: center;
+}
+.separacion {
+  gap: 8rem; 
+  display: flex; /* Agregamos display flex */
+  flex-wrap: wrap; /* Permitimos que los elementos se ajusten */
+  justify-content: center; /* Centramos los elementos */
+}
+
+/* ... (otros estilos) ... */
+
+@media (max-width: 768px) { 
+  /* ... (otros estilos responsive) ... */
+
+  .separacion {
+    gap: 2rem; /* Reducimos el espacio entre elementos */
+  }
+}
+.flex { 
+    display: flex; 
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .justify-between {
+    justify-content: center;
+  }
+  
+  .bg-background {
+    background-color: #f9fafb; /* O el color de fondo que prefieras */
+  }
+  
+  .p-4 {
+    padding: 1rem; 
+  }
+  
+  .w-8 {
+    width: 2rem; 
+  }
+  
+  .h-8 {
+    height: 2rem;
+  }
+  
+  .rounded-full {
+    border-radius: 9999px;
+  }
+  
+  .ml-2 {
+    margin-left: 0.5rem;
+  }
+  
+  .font-semibold {
+    font-weight: 600;
+  }
+  
+  /* Colores de fondo */
+  .bg-primary {
+    background-color: #007bff; /* Azul */
+  }
+  
+  .bg-secondary {
+    background-color: #6c757d; /* Gris */
+  }
+  
+  .bg-accent {
+    background-color: #28a745; /* Verde */
+  }
+  
+  /* Colores de texto */
+  .text-primary-foreground {
+    color: white;
+  }
+  
+  .text-secondary-foreground {
+    color: white;
+  }
+  
+  .text-accent-foreground {
+    color: white;
+  }
+  
+  /* Colores de texto */
+  .text-primary {
+    color: #007bff;
+  }
+  
+  .text-secondary {
+    color: #6c757d;
+  }
+  
+  .text-accent {
+    color: #28a745;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* ResponsiveLayout.css */
+.layout-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.enviar-button {
+  bottom: 20px; /* Distancia desde abajo */
+  right: 20px; /* Distancia desde la derecha */
+  padding: 10px 20px;
+  background-color: #0d6efd; /* Color de fondo */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.left-section {
+  position: relative; /* Para posicionar el botón */
+
+  flex: 2;
+  min-height: 600px;
+  border: 2px dashed #ccc;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.top-box,
+.bottom-box {
+  border: 2px dashed #ccc;
+  padding: 15px;
+  min-height: 290px;
+  border-radius: 4px;
+  background: #fafafa;
+}
+
+/* Estilos para el componente MetodoPago */
+.caja_de_pagos_carrito {
+  padding: 20px;
+}
+
+.metodo-pago-container {
+  margin-bottom: 30px;
+}
+
+.opciones-pago {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.custom-radio {
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.custom-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+
+.custom-radio:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.custom-radio input:checked ~ .checkmark {
+  background-color: #2196F3;
+  border-color: #2196F3;
+}
+
+.info-pago {
+  margin-top: 10px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border-left: 4px solid #2196F3;
+}
+
+.info-pago p {
+  margin: 0;
+  color: #555;
+}
+
+.resumen-carrito {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.resumen-carrito h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.resumen-carrito ul {
+  list-style: none;
+  padding: 0;
+}
+
+.resumen-carrito li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* Estilos responsive */
+@media (max-width: 768px) {
+  .layout-container {
+    flex-direction: column;
+  }
+
+  .left-section {
+    min-height: auto;
+  }
+
+  .right-section {
+    width: 100%;
+  }
+
+  .top-box,
+  .bottom-box {
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-container {
+    padding: 10px;
+  }
+
+  .caja_de_pagos_carrito {
+    padding: 10px;
+  }
+
+  .info-pago {
+    padding: 10px;
+  }
+}
