@@ -1,0 +1,198 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212;
+  color: #fff;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Wrapper */
+.stockwrapper {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.stockcontainer {
+  background-color: #1e1e1e;
+  border-radius: 16px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.8);
+  width: 100%;
+  max-width: 900px;
+  padding: 40px;
+}
+
+/* Heading */
+h1,
+h2 {
+  text-align: center;
+  font-size: 2.4rem;
+  color: white; /* Cian brillante */
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* Alerta */
+.alert {
+  background-color: #ff7043; /* Naranja vibrante */
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.alert:hover {
+  background-color: #ff5722; /* Naranja intenso para hover */
+  transform: scale(1.05);
+}
+
+/* Form Section */
+.formcontainer {
+  margin-bottom: 30px;
+}
+
+.inputcontainer input,
+.inputcontainer select,
+.inputcontainer button {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 2px solid #444;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.inputcontainer input:focus,
+.inputcontainer select:focus,
+.inputcontainer button:focus {
+  border-color: white; /* Cian brillante para enfoque */
+  outline: none;
+}
+
+button {
+  background-color: white; /* Cian brillante */
+  color: #fff;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: black; /* Cian más oscuro para hover */
+  transform: scale(1.05);
+}
+
+/* Product List Section */
+.productlistcontainer {
+  margin-top: 40px;
+}
+
+.productlist {
+  list-style: none;
+}
+
+.productitem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background-color: #333;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.productitem:hover {
+  transform: scale(1.03);
+  background-color: #444; /* Cambio suave de color en hover */
+}
+
+/* Productos Agregados */
+.productitem.added {
+  background-color: white; /* Azul pastel brillante */
+  color: #000;
+}
+
+.productitem.added:hover {
+  background-color: white; /* Azul más claro para hover */
+}
+
+
+/* Productos de Bajo Stock */
+.productitem.lowstock {
+  background-color: #ff9e80; /* Naranja suave (sin ser demasiado brillante) */
+  color: #fff; /* Texto blanco para buen contraste */
+}
+
+.productitem.lowstock:hover {
+  background-color: #333; /* Naranja más intenso para el hover */
+}
+
+
+
+/* Acciones */
+.actions button {
+  margin-left: 10px;
+  background-color: #ff7043; /* Naranja suave para acciones */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s ease-in-out;
+}
+
+.actions button:hover {
+  background-color: #f44336; /* Rojo más fuerte para hover */
+  transform: scale(1.05);
+}
+
+/* Inventory Report Section */
+.inventoryreport {
+  margin-top: 40px;
+  background-color: #222;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.inventoryreport p {
+  font-size: 1.2rem;
+  color: white; /* Azul pastel brillante */
+}
+
+@media (max-width: 768px) {
+  .stock-container {
+    padding: 20px;
+  }
+
+  .product-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inputcontainer input,
+  .inputcontainer select,
+  .inputcontainer button {
+    font-size: 1rem;
+  }
+}
