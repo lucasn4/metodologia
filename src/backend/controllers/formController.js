@@ -8,7 +8,7 @@ const formController = {
 
     console.log("Intentando guardar datos en la base de datos...");
 
-    const query = 'INSERT INTO Huesped (nombreH, apellidoH, telefonoH, emailH, vehiculoH, tipoH, marcamodeloH, colorH, patenteH) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO huesped (nombreH, apellidoH, telefonoH, emailH, vehiculoH, tipoH, marcamodeloH, colorH, patenteH) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
     connection.query(query, [nombreH, apellidoH, telefonoH, emailH, vehiculoH, tipoH, marcamodeloH, colorH, patenteH], (error, results) => {
       if (error) {
         console.error('Error al insertar los datos:', error);
