@@ -12,6 +12,7 @@
   min-height: 600px;
   border: 2px dashed #ccc;
   padding: 15px;
+  color: black;
 }
 
 .right-section {
@@ -19,6 +20,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  color: black;
 }
 
 .top-box,
@@ -128,4 +130,8 @@ p {
   margin-top: 15px;
   margin-bottom: 15px;
 
+}
+.info-pago {
+  
+  color: black;
 }

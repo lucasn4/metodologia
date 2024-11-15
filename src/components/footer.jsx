@@ -64,36 +64,7 @@ export const Footer = () => {
               </div>
             </div>
 
-            <div className="col-lg-4 col-md-12 footer-newsletter" id="iniciosesionempleados">
-              <h4>Inicio sesión empleados</h4>
-
-              {/* Formulario de inicio de sesión */}
-              <div className="for">
-                <form onSubmit={handleSubmit} className="form">
-                  <label>Usuario:
-                    <input
-                      type="text"
-                      name="usuarioE"
-                      value={formData.usuarioE}
-                      onChange={handleChange}
-                      required
-                    />
-                  </label>
-
-                  <label>Contraseña:
-                    <input
-                      type="password"
-                      name="contraseñaE"
-                      value={formData.contraseñaE}
-                      onChange={handleChange}
-                      required
-                    />
-                  </label>
-
-                  <button type="submit">Iniciar sesión</button>
-                </form>
-              </div>
-            </div>
+            
           </div>
         </div>
 

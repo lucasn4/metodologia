@@ -129,3 +129,7 @@ input[type="text"]:focus {
   color: black;
   border-radius: 50%; /* Forma circular */
 }
+.react-calendar__tile.availability-error {
+  background-color: red !important;  /* Asegúrate de que este estilo se aplique */
+  color: white !important; /* Puedes cambiar el color del texto si lo prefieres */
+}

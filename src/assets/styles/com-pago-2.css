@@ -3,9 +3,11 @@
     flex-direction: column;
     justify-content: center; /* Centrado horizontal */
     align-items: center; /* Centrado vertical */
+    color: black;
 }
 
 
 .margenes{
     margin-top: 20px;
+    color: black;
 }

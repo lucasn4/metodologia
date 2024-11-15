@@ -123,14 +123,11 @@ const MetodoPago = ({ items }) => {
   )
 };
 
-const ResponsiveLayout = () => {
+const ResponsiveLayout = ({ formData , numberOfRooms , start , end }) => {
     // Datos de ejemplo para el carrito
-    const itemsCarrito = [
-        { nombre: "Habitación Simple - 1 noche" },
-        { nombre: "Habitación Doble - 2 noches" }
-    ];
-
-    return (
+    const itemsCarrito = Array.from({ length: numberOfRooms }, (_, index) => ({ nombre: `Habitación ${index + 1}` }));
+    console.log(itemsCarrito);
+        return (
         <div className="espacio layout-container">
             <div className="left-section">
                 <MetodoPago items={itemsCarrito} /> 
@@ -140,7 +137,7 @@ const ResponsiveLayout = () => {
                 <div className="top-box">
                     <div className="content-box">
                         <h3>Detalles de la Reserva</h3>
-                        <p>Información adicional sobre tu reserva...</p>
+                        <p>Fecha de Entrada: {start}</p><p>Fecha de Salida: {end}</p>
 
                         {/* Resumen del Carrito */}
                         <h3>Resumen del Carrito</h3>
@@ -155,7 +152,10 @@ const ResponsiveLayout = () => {
                 <div className="bottom-box">
                     <div className="content-box">
                         <h3>Información de Contacto</h3>
-                        <p>Datos de contacto y soporte...</p>
+                        <p>Nombre: {formData.nombreH}</p>
+                        <p>Apellido: {formData.apellidoH}</p>
+                        <p>Telefono: {formData.telefonoH}</p>
+                        <p>Email: {formData.emailH}</p>
                     </div>
                 </div>
             </div>

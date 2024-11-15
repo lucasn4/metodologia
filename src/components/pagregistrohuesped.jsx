@@ -1,10 +1,12 @@
 import Header from './header.jsx';
 import Footer from './footer.jsx';
-import React, { useState, useEffect,useRef  } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../assets/styles/formulario.css';
 import Calendar from 'react-calendar';
+import CompPago from './comp-Pago.jsx';
 import 'react-calendar/dist/Calendar.css';
 import '../assets/styles/reservafechas.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Formulario() {
     const [formData, setFormData] = useState({
@@ -22,35 +24,61 @@ function Formulario() {
     const [currentStep, setCurrentStep] = useState(1);
     const [habitacionesDisponibles, setHabitacionesDisponibles] = useState(null);
     const reservaRef = useRef();
+    const [selectedDates, setSelectedDates] = useState([]); 
+    const [dateRange, setDateRange] = useState(''); 
+    const [successMessage, setSuccessMessage] = useState('');
+    const [numberOfRooms, setNumberOfRooms] = useState(1);    // Almacena el número de habitaciones seleccionadas
+    const [errors, setErrors] = useState({});
+    const [error, setError] = useState("");  
+    const [availabilityError, setAvailabilityError] = useState(false);
+    const [nofechas, setNofechas] = useState([]);
+    const [start, setStart] = useState("");
+    const [end, setEnd] = useState("");
+    // Almacena el mensaje de error
+
+    const formatDate = (date) => {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+      };
+    ;
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
             [name]: type === 'checkbox' ? checked : value
         });
+        setErrors({ ...errors, [name]: '' }); // Limpiar error cuando el usuario empieza a escribir
+    
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            
-            const response = await fetch('http://localhost:5000/api/guardarDatos', {
+            // Asegúrate de que haya dos fechas seleccionadas
+            if (selectedDates.length !== 2) {
+                console.warn("Debe seleccionar un rango de dos fechas.");
+                return;
+            }
+    
+            // Formatea las fechas
+            const startDate = selectedDates[0].toISOString().split('T')[0];
+            const endDate = selectedDates[1].toISOString().split('T')[0];
+    
+            // Incluye los datos del huésped y las fechas en el cuerpo de la solicitud
+            const response = await fetch('http://localhost:5000/api/guardarDatosYReservarFechas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({ ...formData, startDate, endDate }),
             });
-
-            // Enviar las fechas solo si hay dos seleccionadas
-            if (selectedDates.length === 2) {
-                sendDatesToBackend(selectedDates);
-            } else {
-                console.warn("Debe seleccionar un rango de dos fechas.");
-            }
-
+    
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.message); // Muestra el mensaje de éxito
-                // Reiniciar el formulario y las fechas
+                console.log(data.message); // Mensaje de éxito
+                setSuccessMessage('Datos enviados con éxito'); 
+                // Reinicia el formulario y el estado
                 setFormData({
                     nombreH: '',
                     apellidoH: '',
@@ -64,82 +92,123 @@ function Formulario() {
                 });
                 setSelectedDates([]);
                 setDateRange('');
-                setCurrentStep(1); // Volver al primer paso del formulario
+                setCurrentStep(1); // Vuelve al primer paso del formulario
             } else {
                 console.error('Error al enviar los datos');
+                setSuccessMessage('Error al enviar los datos'); 
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
+            setSuccessMessage('Error al enviar los datos'); 
         }
     };
+    
+    
+    //const isStepOneComplete = formData.nombreH && formData.apellidoH && formData.telefonoH && formData.emailH;
+    const isStepOneComplete2 = selectedDates;
 
-    const isStepOneComplete = formData.nombreH && formData.apellidoH && formData.telefonoH && formData.emailH;
+    const validateStepOne = () => {
+      const newErrors = {};
+      if (!formData.nombreH) newErrors.nombreH = 'Debe ingresar este campo';
+      if (!formData.apellidoH) newErrors.apellidoH = 'Debe ingresar este campo';
+      if (!formData.telefonoH) newErrors.telefonoH = 'Debe ingresar este campo';
+      if (!formData.emailH) newErrors.emailH = 'Debe ingresar este campo';
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+  };
+  const validateStepTwo = () => {
+    const newErrors = {};
+    if (selectedDates.length !== 2) { // Verifica que se hayan seleccionado dos fechas
+        newErrors.selectedDates = 'Debe seleccionar un rango de dos fechas';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+};
 
     const handleNext = () => {
-        if (isStepOneComplete) {
+        if (validateStepOne()) {
             setCurrentStep(2);
         }
     };
+    const handleNext3 = async () => {
+      if (!validateStepTwo()) return;
+    
+      try {
+        const startDate = formatDate(selectedDates[0]);
+        const endDate = formatDate(selectedDates[1]);
+    
+        const response = await fetch(
+          `http://localhost:5000/api/verificarDisponibilidad?startDate=${startDate}&endDate=${endDate}`
+        );
+    
+        if (!response.ok) {
+          throw new Error('Error al verificar la disponibilidad');
+        }
+    
+        const data = await response.json();
+        let hasError = false;
+    
+        if (data.length > 0) {
+          console.log('Fechas disponibles:', data);
+          for (let i = 0; i < data.length; i++) {
+            console.log(data[i].habitacionesdis);
+            if (data[i].habitacionesdis >= numberOfRooms) {
+              setCurrentStep(3);
+            }
+            else{
+              console.log('No hay disponibilidad para esta fecha: ', formatDate(data[i].fechasdis));
+              setNofechas(formatDate(data[i].fechasdis));
+              hasError = true;
+            }
+          }
+        } else {
+          console.log('No hay disponibilidad para las fechas seleccionadas');
+          hasError = true;
+        }
+        setAvailabilityError(hasError);
+      } catch (error) {
+        console.error('Error:', error.message);
+        setAvailabilityError(true); // Por si hay un error en la solicitud
+      }
+    };
+    
 
     const handleBack = () => {
         setCurrentStep(1);
     };
+    const handleBack2 = () => {
+        setCurrentStep(2);
+    };
 
-    /******************************************************  */
-
-    const [selectedDates, setSelectedDates] = useState([]); // Array de fechas seleccionadas
-    const [dateRange, setDateRange] = useState(''); // Rango de fechas en texto
+    // Estado para el rango de fechas seleccionadas en el calendario
+    
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Asegura que 'today' solo tenga la fecha sin horas
+    today.setHours(0, 0, 0, 0);
 
     const handleDateClick = (date) => {
         if (selectedDates.length < 2) {
             const newDates = [...selectedDates, date];
             setSelectedDates(newDates);
 
-            // Si ya se han seleccionado dos fechas, crea el rango
             if (newDates.length === 2) {
                 const formattedDates = newDates
                 .map((date) => date.toLocaleDateString('es-ES'))
                 .join(' / ');
                 setDateRange(`(${formattedDates})`);
-                /*sendDatesToBackend(newDates);*/
             }
         } else {
-            // Si ya se seleccionaron dos fechas, reinicia
             setSelectedDates([date]);
             setDateRange('');
         }
     };
 
-    const sendDatesToBackend = async (dates) => {
-    try {
-        const startDate = dates[0].toISOString().split('T')[0];
-        const endDate = dates[1].toISOString().split('T')[0];
-
-        const response = await fetch('http://localhost:5000/api/reservarFechas', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ startDate, endDate }),
-        });
-    
-        const data = await response.json();
-        console.log(data.message); // Mostrar mensaje de éxito o error
-    } catch (error) {
-        console.error('Error al reservar fechas:', error);
-    }
-    };
-    // Función para resaltar fechas dentro del rango
     const tileClassName = ({ date }) => {
         if (selectedDates.length === 2) {
             const [startDate, endDate] = selectedDates;
-            // Comprueba si la fecha está dentro del rango
             if (date >= startDate && date <= endDate) {
-                return 'in-range'; // Aplica una clase 'in-range' para las fechas dentro del rango
+                return 'in-range';
             }
         }
-
-        // Aplica la clase 'selected' solo a las fechas seleccionadas
         return selectedDates.some(
         (selectedDate) => selectedDate.toDateString() === date.toDateString()
         )
@@ -147,9 +216,8 @@ function Formulario() {
           : null;
     };
 
-    // Deshabilita las fechas antes de hoy o dentro del rango seleccionado
     const tileDisabled = ({ date }) => {
-        date.setHours(0, 0, 0, 0); // Asegura que solo compare la fecha sin horas
+        date.setHours(0, 0, 0, 0);
         if (date < today) {
             return true;
         }
@@ -158,47 +226,117 @@ function Formulario() {
         }
         return false;
     };
-
+    useEffect(() => {
+      if (selectedDates.length === 2) { // Asegúrate de que hay dos fechas seleccionadas
+        const s = formatDate(selectedDates[0]);
+        const e = formatDate(selectedDates[1]);
+        setStart(s);
+        setEnd(e);
+      }
+    }, [selectedDates]); // El efecto se ejecutará solo cuando cambie `selectedDates`
+    console.log(start);
+    console.log(end);
     return (
         <>
             <Header />
+
             <div className="form-container">
+                
                 <form onSubmit={handleSubmit} className="form">
+                {successMessage && <label className="success-message">{successMessage}</label>}
+                    
                     {currentStep === 1 && (
                         <>
-                            <label>Nombre:
+                            <label>PASO 1</label>
+                            <div className="icon-container">
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 1 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-file-person" style={{ fontSize: '2rem', color: 'white'}}></i>
+  </div>
+
+  <div 
+    className="icon-circle"
+    style={{
+      backgroundColor: 'lightgrey'
+    }}
+  >
+    <i className="bi bi-three-dots" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 2 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-door-closed" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: 'lightgrey'
+    }}
+  >
+    <i className="bi bi-three-dots" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 3 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-cash-coin" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+</div>
+<label>Nombre (*):
                                 <input
                                     type="text"
                                     name="nombreH"
                                     value={formData.nombreH}
+                                    placeholder="Ingrese su nombre"
                                     onChange={handleChange}
+                                    style={{ borderColor: errors.nombreH ? 'red' : '' }}
                                 />
+                                {errors.nombreH && <span className="error-text">{errors.nombreH}</span>}
                             </label>
-
-                            <label>Apellido:
+                            <label>Apellido (*):
                                 <input
                                     type="text"
                                     name="apellidoH"
                                     value={formData.apellidoH}
+                                    placeholder="Ingrese su apellido"
                                     onChange={handleChange}
+                                    style={{ borderColor: errors.apellidoH ? 'red' : '' }}
                                 />
+                                {errors.apellidoH && <span className="error-text">{errors.apellidoH}</span>}
                             </label>
-                            <label>Teléfono:
+                            <label>Teléfono (*):
                                 <input
                                     type="tel"
                                     name="telefonoH"
                                     value={formData.telefonoH}
+                                    placeholder="Ingrese su telefono"
                                     onChange={handleChange}
+                                    style={{ borderColor: errors.telefonoH ? 'red' : '' }}
                                 />
+                                {errors.telefonoH && <span className="error-text">{errors.telefonoH}</span>}
                             </label>
-                            
-                            <label>Email:
+                            <label>Email (*):
                                 <input
                                     type="email"
                                     name="emailH"
                                     value={formData.emailH}
+                                    placeholder="Ingrese su email"
                                     onChange={handleChange}
+                                    style={{ borderColor: errors.emailH ? 'red' : '' }}
                                 />
+                                {errors.emailH && <span className="error-text">{errors.emailH}</span>}
                             </label>
                             <label>Vehículo:
                                 <input
@@ -216,6 +354,7 @@ function Formulario() {
                                             type="text"
                                             name="tipoH"
                                             value={formData.tipoH}
+                                    placeholder="Ingrese su tipo de vehiculo"
                                             onChange={handleChange}
                                         />
                                     </label>
@@ -224,6 +363,7 @@ function Formulario() {
                                             type="text"
                                             name="marcamodeloH"
                                             value={formData.marcamodeloH}
+                                    placeholder="Ingrese marca y modelo de su vehiculo"
                                             onChange={handleChange}
                                         />
                                     </label>
@@ -232,22 +372,23 @@ function Formulario() {
                                             type="text"
                                             name="colorH"
                                             value={formData.colorH}
+                                            placeholder="Ingrese el color de su vehiculo"
                                             onChange={handleChange}
                                         />
                                     </label>
-
                                     <label>Patente:
                                         <input
                                             type="text"
                                             name="patenteH"
                                             value={formData.patenteH}
+                                            placeholder="Ingrese patente de su vehiculo"
                                             onChange={handleChange}
                                         />
                                     </label>
                                 </>
                             )}
-
-                            <button type="button" onClick={handleNext} disabled={!isStepOneComplete}>
+                            <label style={{ color: 'red' }}>(*) Campos obligatorios</label>
+                            <button type="button" onClick={handleNext}>
                                 Siguiente
                             </button>
                         </>
@@ -255,25 +396,147 @@ function Formulario() {
 
                     {currentStep === 2 && (
                         <>
+                        <label>PASO 2</label>
+                        <div className="icon-container">
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 1 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-file-person" style={{ fontSize: '2rem', color: 'white'}}></i>
+  </div>
+
+  <div 
+    className="icon-circle"
+    style={{
+      backgroundColor: 'lightgrey'
+    }}
+  >
+    <i className="bi bi-three-dots" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 2 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-door-closed" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: 'lightgrey'
+    }}
+  >
+    <i className="bi bi-three-dots" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 3 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-cash-coin" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+</div>
                             <div>
                                 <Calendar
-                                    onClickDay = {handleDateClick}
+                                    onClickDay={handleDateClick}
                                     tileClassName={tileClassName}
                                     tileDisabled={tileDisabled}
-                                    />
-                                <input type="text" value={dateRange} readOnly />
+                                />
+                                <input type="text" value={dateRange} readOnly 
+                                    style={{ borderColor: errors.selectedDates ? 'red' : '' }}
+                                />
+                                {errors.selectedDates && <span className="error-text">{errors.selectedDates}</span>}
+                                <label>Numero de habitaciones:
+                                <input 
+                                type="number" 
+                                placeholder="Ingrese el numero de habitaciones" 
+                                min={1} 
+                                max={7}
+                                value={numberOfRooms}
+                                onChange={(e) => setNumberOfRooms(Number(e.target.value))}
+                                />
+                                </label>
+                                {availabilityError && (
+                                <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>
+                                No hay disponibilidad en una de las fechas seleccionadas ( 
+                                {nofechas} fecha(s) sin disponibilidad).
+                                </span>
+                                )}
                             </div>
                             
-                            <button type="button" /*onClick={}*/>
-                                Ver disponibilidad habitaciones
-                            </button>
-
-                            
-
                             <button type="button" onClick={handleBack}>
                                 Atrás
                             </button>
-                            <button type="submit" onClick={handleSubmit}>
+                            
+                            <button type="button" onClick={handleNext3} >
+                                Siguiente
+                            </button>
+                            
+                        </>
+                    )}
+                    {currentStep === 3 && (
+                        <>
+                        <label>PASO 3</label>
+                        <div className="icon-container">
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 1 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-file-person" style={{ fontSize: '2rem', color: 'white'}}></i>
+  </div>
+
+  <div 
+    className="icon-circle"
+    style={{
+      backgroundColor: 'lightgrey'
+    }}
+  >
+    <i className="bi bi-three-dots" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 2 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-door-closed" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: 'lightgrey'
+    }}
+  >
+    <i className="bi bi-three-dots" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+
+  <div 
+    className="icon-circle" 
+    style={{
+      backgroundColor: currentStep === 3 ? '#48362C' : 'lightgrey'
+    }}
+  >
+    <i className="bi bi-cash-coin" style={{ fontSize: '2rem', color: 'white' }}></i>
+  </div>
+</div>
+                            <CompPago formData={formData} numberOfRooms={numberOfRooms} start={start} end={end} />
+                            <button type="button" onClick={handleBack2}>
+                                Atrás
+                            </button>
+                            
+                            
+                            <button type="submit">
                                 Enviar
                             </button>
                         </>
