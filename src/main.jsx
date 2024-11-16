@@ -12,6 +12,7 @@ import Admin from './routes/Admin.jsx';
 import Login from './routes/Login.jsx';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Estacionamiento from './routes/Estacionamiento.jsx';
 
 import Pagregistrohuesped from './components/pagregistrohuesped.jsx';
 
@@ -43,6 +44,43 @@ root.render(
                 <Stock />
               </ProtectedRoute>
             } 
+            
+          />
+
+          <Route 
+          path="/admin/estacionamiento" 
+          element={
+            <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+            <Estacionamiento />
+            </ProtectedRoute>
+          }
+
+          />
+          <Route 
+          path="/admin/huespedes" 
+          element={
+            <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+            <huespedes />
+            </ProtectedRoute>   
+
+          }
+
+          />
+          <Route
+          path = "admin/habitaciones"
+          element={
+            <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+            <habitaciones />
+            </ProtectedRoute>
+          }
+          />
+          <Route
+          path = "admin/solicitudes"
+          element={
+            <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+            <solicitudes />
+            </ProtectedRoute>
+          }
           />
         </Routes>
       </BrowserRouter>
