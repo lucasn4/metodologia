@@ -38,6 +38,12 @@ const Admin = () => {
           text="6"
           Linkpagina="/admin/solicitudes"
         />
+         <CardTicket
+          ticket="estacionamiento"
+          totalTickets="estacionamiento"
+          text= "3"
+          Linkpagina="/admin/estacionamiento"
+        />
       </div>
       <div>
         <h1 className="title">notificaciones</h1>

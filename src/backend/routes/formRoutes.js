@@ -1,7 +1,7 @@
 // formRoutes.js
 import express from 'express';
 import formController from '../controllers/formController.js';
-import crudstock from '../controllers/crudstock.js';
+import { getAllSpots, getHuespedesConVehiculos, assignSpot } from '../controllers/estacionamientoController.js';
 
 const router = express.Router();
 
@@ -12,15 +12,12 @@ router.get('/verificarDisponibilidad', formController.verificarDisponibilidad);
 router.post('/guardarDatosYReservarFechas', formController.guardarDatosYReservarFechas);
 
 // Ruta para obtener todos los productos
-router.get('/products', crudstock.obtenerProductos);
-
-// Ruta para agregar un nuevo producto
-router.post('/products', crudstock.agregarProducto);
 
 // Ruta para actualizar un producto
-router.put('/products/:id', crudstock.actualizarProducto);
 
-// Ruta para eliminar un producto
-router.delete('/products/:id', crudstock.eliminarProducto);
+
+router.get('/spots', getAllSpots);
+router.get('/huespedes', getHuespedesConVehiculos);
+router.put('/assign', assignSpot);
 
 export default router;
