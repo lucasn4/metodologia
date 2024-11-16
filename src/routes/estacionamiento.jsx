@@ -59,23 +59,15 @@ const Estacionamiento = () => {
               totalTickets={spot.espacio}
               text={
                 spot.estado === 1
-                  ? `${spot.patenteH} (${spot.marcamodeloH})`
-                  : "Disponible"
+                  ? `${spot.patenteH} ${spot.marcamodeloH} ${spot.nombreH} ${spot.apellidoH}`
+                  : "Libre"
               }
             />
           </div>
         ))}
       </div>
 
-      {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <button onClick={() => setIsModalOpen(false)}>Cerrar</button>
-            <h2>Editar Información</h2>
-            <button onClick={handleSave}>Guardar</button>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 };
