@@ -1,7 +1,5 @@
-// formRoutes.js
 import express from 'express';
 import formController from '../controllers/formController.js';
-import crudstock from '../controllers/crudstock.js';
 
 const router = express.Router();
 
@@ -11,16 +9,10 @@ router.get('/verificarDisponibilidad', formController.verificarDisponibilidad);
 // Ruta para guardar datos y reservar fechas
 router.post('/guardarDatosYReservarFechas', formController.guardarDatosYReservarFechas);
 
-// Ruta para obtener todos los productos
-router.get('/products', crudstock.obtenerProductos);
+//  Eliminamos las rutas que dependen de crudstock.js
+// router.get('/products', crudstock.obtenerProductos);
+// router.post('/products', crudstock.agregarProducto);
+// router.put('/products/:id', crudstock.actualizarProducto);
+// router.delete('/products/:id', crudstock.eliminarProducto); 
 
-// Ruta para agregar un nuevo producto
-router.post('/products', crudstock.agregarProducto);
-
-// Ruta para actualizar un producto
-router.put('/products/:id', crudstock.actualizarProducto);
-
-// Ruta para eliminar un producto
-router.delete('/products/:id', crudstock.eliminarProducto);
-
-export default router;
+export default router;

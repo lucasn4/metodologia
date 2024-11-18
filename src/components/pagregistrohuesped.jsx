@@ -484,6 +484,7 @@ function Formulario() {
                     {currentStep === 3 && (
                         <>
                         <label>PASO 3</label>
+                        
                         <div className="icon-container">
   <div 
     className="icon-circle" 
