@@ -3,8 +3,8 @@ import { getAllSpots, getHuespedesConVehiculos, assignSpot } from '../controller
 
 const router = express.Router();
 
-router.get('/estacionamiento', getAllSpots);
+router.get('/spots', getAllSpots);
 router.get('/huespedes', getHuespedesConVehiculos);
-
+router.put('/spots/:id', assignSpot);
 
 export default router;
