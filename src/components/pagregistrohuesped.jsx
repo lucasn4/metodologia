@@ -9,6 +9,14 @@ import '../assets/styles/reservafechas.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Formulario() {
+  const [metodoPago, setMetodoPago] = useState("");
+  const [file, setFile] = useState(null);
+  const [fileChosen, setFileChosen] = useState("Ningún archivo seleccionado");
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+    setFileChosen(event.target.files[0].name);
+};
     const [formData, setFormData] = useState({
         nombreH: '',
         apellidoH: '',
@@ -74,6 +82,38 @@ function Formulario() {
                 body: JSON.stringify({ ...formData, startDate, endDate }),
             });
     
+            const formDataToSend = new FormData();
+            formDataToSend.append("to", "programacionprueba99@gmail.com");
+            formDataToSend.append("subject", "Nueva Reserva");
+            formDataToSend.append(
+                "text",
+                `Información de el Huesped; PAGO
+                    Nombre: ${formData.nombreH}
+                    Apellido: ${formData.apellidoH}
+                    Teléfono: ${formData.telefonoH}
+                    Email: ${formData.emailH}
+                    Pago: ${metodoPago}
+                    ${formData.vehiculoH ? `Vehículo: Sí` : `Vehículo: No`}
+                    ${formData.vehiculoH ? `Tipo de vehículo: ${formData.tipoH}` : ""}
+                    ${formData.vehiculoH ? `Marca y modelo: ${formData.marcamodeloH}` : ""}
+                    ${formData.vehiculoH ? `Color: ${formData.colorH}` : ""}
+                    ${formData.vehiculoH ? `Patente: ${formData.patenteH}` : ""}`
+            );
+
+            if (file) {
+                formDataToSend.append("attachment", file);
+            }
+
+            const response2 = await fetch(
+                "http://localhost:5000/api/email/send-email",
+                {
+                    method: "POST",
+                    body: formDataToSend,
+                }
+            );
+
+
+
             if (response.ok) {
                 const data = await response.json();
                 console.log(data.message); // Mensaje de éxito
@@ -531,8 +571,16 @@ function Formulario() {
     <i className="bi bi-cash-coin" style={{ fontSize: '2rem', color: 'white' }}></i>
   </div>
 </div>
-                            <CompPago formData={formData} numberOfRooms={numberOfRooms} start={start} end={end} />
-                            <button type="button" onClick={handleBack2}>
+<CompPago 
+                                formData={formData} 
+                                numberOfRooms={numberOfRooms} 
+                                start={start} 
+                                end={end}
+                                metodoPago={metodoPago}
+                                setMetodoPago={setMetodoPago}
+                                handleFileChange={handleFileChange}
+                                fileChosen={fileChosen}
+                            />                            <button type="button" onClick={handleBack2}>
                                 Atrás
                             </button>
                             

@@ -1,6 +1,6 @@
 import React from "react";
 import "../assets/styles/pagos.css";
-import Pago from "../components/comp-Pago.jsx";
+//import Pago from "../components/comp-Pago.jsx";
 
 const ReactComponent = () => {
   const itemsCarrito = [
