@@ -32,6 +32,8 @@ const CardTicket = ({ ticket, totalTickets, text, Linkpagina }) => {
         {/* Información del ticket */}
         <h1 className="text-5xl font-bold text-white">{totalTickets}</h1>
         <h2 className={`text-xl font-medium ${statusClass}`}>{text}</h2>
+       
+        
       </div>
 
       {/* Botón de agregar */}
