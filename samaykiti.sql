@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-11-2024 a las 21:23:28
+-- Tiempo de generación: 19-11-2024 a las 21:14:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -29,16 +29,63 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `empleados` (
   `idEmpleado` int(11) NOT NULL,
-  `usuarioE` varchar(30) NOT NULL,
-  `contraseñaE` varchar(30) NOT NULL
+  `nombreE` varchar(30) NOT NULL,
+  `apellidoE` varchar(30) NOT NULL,
+  `puestoE` varchar(30) NOT NULL,
+  `fechaAltaE` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `empleados`
 --
 
-INSERT INTO `empleados` (`idEmpleado`, `usuarioE`, `contraseñaE`) VALUES
-(1, 'lucasnaranjo', 'lucas123');
+INSERT INTO `empleados` (`idEmpleado`, `nombreE`, `apellidoE`, `puestoE`, `fechaAltaE`) VALUES
+(8, 'asd', 'asdds', 'as', '1994-12-12'),
+(15, 'jose', 'gonzalez', 'salon', '2021-08-15');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estacionamiento`
+--
+
+CREATE TABLE `estacionamiento` (
+  `idEstacionamiento` int(11) NOT NULL,
+  `idHuesped` int(11) NOT NULL,
+  `patenteH` varchar(10) NOT NULL,
+  `marcamodeloH` varchar(30) NOT NULL,
+  `estado` int(11) NOT NULL,
+  `espacio` int(11) NOT NULL,
+  `NOMBREH` varchar(30) DEFAULT NULL,
+  `APELLIDOH` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estacionamiento10filas`
+--
+
+CREATE TABLE `estacionamiento10filas` (
+  `idEstacionamiento` int(11) NOT NULL,
+  `idHuesped` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Volcado de datos para la tabla `estacionamiento10filas`
+--
+
+INSERT INTO `estacionamiento10filas` (`idEstacionamiento`, `idHuesped`) VALUES
+(1, NULL),
+(2, NULL),
+(3, NULL),
+(4, NULL),
+(5, NULL),
+(6, NULL),
+(7, NULL),
+(8, NULL),
+(9, NULL),
+(10, NULL);
 
 -- --------------------------------------------------------
 
@@ -817,15 +864,21 @@ INSERT INTO `fechas_ocupadas` (`idfechasocupadas`, `fechasoc`, `habitacionesoc`)
 CREATE TABLE `habitaciones` (
   `idhabitaciones` int(11) NOT NULL,
   `habdisponibles` int(2) NOT NULL,
-  `habocupadas` int(2) NOT NULL
+  `idHuesped` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `habitaciones`
 --
 
-INSERT INTO `habitaciones` (`idhabitaciones`, `habdisponibles`, `habocupadas`) VALUES
-(1, 7, 0);
+INSERT INTO `habitaciones` (`idhabitaciones`, `habdisponibles`, `idHuesped`) VALUES
+(1, 0, NULL),
+(2, 0, NULL),
+(3, 0, NULL),
+(4, 0, NULL),
+(5, 0, NULL),
+(6, 0, NULL),
+(7, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -846,12 +899,68 @@ CREATE TABLE `huesped` (
   `patenteH` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `huesped`
+-- Estructura de tabla para la tabla `pagos`
 --
 
-INSERT INTO `huesped` (`idHuesped`, `nombreH`, `apellidoH`, `telefonoH`, `emailH`, `vehiculoH`, `tipoH`, `marcamodeloH`, `colorH`, `patenteH`) VALUES
-(8, 'lucas', 'naranjo sosa', '4252525', 'lucas_naranjo@live.com', 1, 'moto', 'motomel s2', 'negro', 'a111vvv');
+CREATE TABLE `pagos` (
+  `idpago` int(11) NOT NULL,
+  `idsolicitud` int(11) DEFAULT NULL,
+  `estado` tinyint(1) DEFAULT NULL,
+  `fecha_pago` date DEFAULT NULL,
+  `tipo` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Volcado de datos para la tabla `pagos`
+--
+
+INSERT INTO `pagos` (`idpago`, `idsolicitud`, `estado`, `fecha_pago`, `tipo`) VALUES
+(5, 62, 0, '2024-11-18', 'efectivo'),
+(8, 65, 0, '2024-11-18', 'efectivo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `solicitudes`
+--
+
+CREATE TABLE `solicitudes` (
+  `idsolicitudes` int(4) NOT NULL,
+  `nombreH` varchar(30) NOT NULL,
+  `apellidoH` varchar(30) NOT NULL,
+  `telefonoH` varchar(30) NOT NULL,
+  `emailH` varchar(50) NOT NULL,
+  `vehiculoH` tinyint(1) NOT NULL,
+  `tipoH` varchar(30) NOT NULL,
+  `marcamodeloH` varchar(30) NOT NULL,
+  `colorH` varchar(10) NOT NULL,
+  `PatenteH` varchar(15) NOT NULL,
+  `nhabitaciones` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `solicitudes`
+--
+
+INSERT INTO `solicitudes` (`idsolicitudes`, `nombreH`, `apellidoH`, `telefonoH`, `emailH`, `vehiculoH`, `tipoH`, `marcamodeloH`, `colorH`, `PatenteH`, `nhabitaciones`) VALUES
+(62, 'elias asd', 'medina', '38167585', 'maaasasdnn@gmail.com', 0, '', '', '', '', 0),
+(65, 'juan ignacio', 'torrez', '467841', 'juaningacio@gmail.com', 0, '', '', '', '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `stock`
+--
+
+CREATE TABLE `stock` (
+  `idProducto` int(5) NOT NULL,
+  `Producto` varchar(100) NOT NULL,
+  `TipodeProducto` varchar(100) NOT NULL,
+  `Cantidad` int(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Índices para tablas volcadas
@@ -862,6 +971,20 @@ INSERT INTO `huesped` (`idHuesped`, `nombreH`, `apellidoH`, `telefonoH`, `emailH
 --
 ALTER TABLE `empleados`
   ADD PRIMARY KEY (`idEmpleado`);
+
+--
+-- Indices de la tabla `estacionamiento`
+--
+ALTER TABLE `estacionamiento`
+  ADD PRIMARY KEY (`idEstacionamiento`),
+  ADD KEY `idHuesped` (`idHuesped`);
+
+--
+-- Indices de la tabla `estacionamiento10filas`
+--
+ALTER TABLE `estacionamiento10filas`
+  ADD PRIMARY KEY (`idEstacionamiento`),
+  ADD KEY `fk_estacionamiento10filas_huesped` (`idHuesped`);
 
 --
 -- Indices de la tabla `fechas_disponibles`
@@ -879,13 +1002,33 @@ ALTER TABLE `fechas_ocupadas`
 -- Indices de la tabla `habitaciones`
 --
 ALTER TABLE `habitaciones`
-  ADD PRIMARY KEY (`idhabitaciones`);
+  ADD PRIMARY KEY (`idhabitaciones`),
+  ADD KEY `fk_habitaciones_huesped` (`idHuesped`);
 
 --
 -- Indices de la tabla `huesped`
 --
 ALTER TABLE `huesped`
   ADD PRIMARY KEY (`idHuesped`);
+
+--
+-- Indices de la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  ADD PRIMARY KEY (`idpago`),
+  ADD KEY `idsolicitud` (`idsolicitud`);
+
+--
+-- Indices de la tabla `solicitudes`
+--
+ALTER TABLE `solicitudes`
+  ADD PRIMARY KEY (`idsolicitudes`);
+
+--
+-- Indices de la tabla `stock`
+--
+ALTER TABLE `stock`
+  ADD PRIMARY KEY (`idProducto`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -895,7 +1038,13 @@ ALTER TABLE `huesped`
 -- AUTO_INCREMENT de la tabla `empleados`
 --
 ALTER TABLE `empleados`
-  MODIFY `idEmpleado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idEmpleado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT de la tabla `estacionamiento`
+--
+ALTER TABLE `estacionamiento`
+  MODIFY `idEstacionamiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `fechas_disponibles`
@@ -910,16 +1059,56 @@ ALTER TABLE `fechas_ocupadas`
   MODIFY `idfechasocupadas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=367;
 
 --
--- AUTO_INCREMENT de la tabla `habitaciones`
---
-ALTER TABLE `habitaciones`
-  MODIFY `idhabitaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT de la tabla `huesped`
 --
 ALTER TABLE `huesped`
-  MODIFY `idHuesped` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `idHuesped` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  MODIFY `idpago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT de la tabla `solicitudes`
+--
+ALTER TABLE `solicitudes`
+  MODIFY `idsolicitudes` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+
+--
+-- AUTO_INCREMENT de la tabla `stock`
+--
+ALTER TABLE `stock`
+  MODIFY `idProducto` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `estacionamiento`
+--
+ALTER TABLE `estacionamiento`
+  ADD CONSTRAINT `estacionamiento_ibfk_1` FOREIGN KEY (`idHuesped`) REFERENCES `huesped` (`idHuesped`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `estacionamiento10filas`
+--
+ALTER TABLE `estacionamiento10filas`
+  ADD CONSTRAINT `fk_estacionamiento10filas_huesped` FOREIGN KEY (`idHuesped`) REFERENCES `huesped` (`idHuesped`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `habitaciones`
+--
+ALTER TABLE `habitaciones`
+  ADD CONSTRAINT `fk_habitaciones_huesped` FOREIGN KEY (`idHuesped`) REFERENCES `huesped` (`idHuesped`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  ADD CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`idsolicitud`) REFERENCES `solicitudes` (`idsolicitudes`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
