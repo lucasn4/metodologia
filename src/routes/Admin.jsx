@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CardTicket from "../components/CardTicket";
 import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
@@ -8,6 +8,41 @@ import '../assets/styles/admin.css';  // Importa el archivo CSS
 
 
 const Admin = () => {
+  const [totalSolicitudes, setTotalSolicitudes] = useState(null);
+  const [totalEmpleados, setTotalEmpleados] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+      const obtenersolicitudes = async () => {
+        try {
+          const response = await fetch("http://localhost:5000/api/contarsolicitudes");
+          if (!response.ok) {
+              throw new Error("Error al obtener los datos del servidor");
+          }
+          const data = await response.json();
+          setTotalSolicitudes(data.totalSolicitudes);
+        } catch (err) {
+          console.error("Error al obtener el total de solicitudes:", err);
+          setError("No se pudo obtener el total de solicitudes.");
+        }
+      };
+      const obtenerTotalEmpleados = async () => {
+          try {
+              const response = await fetch("http://localhost:5000/api/contarempleados");
+              if (!response.ok) {
+                  throw new Error("Error al obtener los datos del servidor");
+              }
+              const data = await response.json();
+              setTotalEmpleados(data.totalEmpleados);
+          } catch (err) {
+              console.error("Error al obtener el total de empleados:", err);
+              setError("No se pudo obtener el total de empleados.");
+          }
+      };
+      obtenersolicitudes();
+      obtenerTotalEmpleados();
+  }, []);
+
   return (
     <div className="home-container">
       <div className="flex items-center justify-between mb-10">
@@ -34,9 +69,15 @@ const Admin = () => {
         />
         <CardTicket
           ticket="solicitudes pendientes"
-          totalTickets="sOLICITUDES"
-          text="6"
+          totalTickets="SOLICITUDES"
+          text={totalSolicitudes !== null ? totalSolicitudes : "Cargando..."}
           Linkpagina="/admin/solicitudes"
+        />
+        <CardTicket
+          ticket="solicitudes pendientes"
+          totalTickets="Empleados"
+          text={totalEmpleados !== null ? totalEmpleados : "Cargando..."}
+          Linkpagina="/admin/empleados"
         />
       </div>
       <div>

@@ -31,7 +31,6 @@ export const Footer = () => {
 
       const data = await response.json();
       if (response.ok) {
-        console.log(data.message); // Mensaje de éxito en la consola
         navigate('/registro'); // Redirige a la página principal al iniciar sesión
       } else {
         console.error('Inicio de sesión fallido:', data.message);

@@ -11,16 +11,35 @@ router.get('/verificarDisponibilidad', formController.verificarDisponibilidad);
 // Ruta para guardar datos y reservar fechas
 router.post('/guardarDatosYReservarFechas', formController.guardarDatosYReservarFechas);
 
-// Ruta para obtener todos los productos
-router.get('/products', crudstock.obtenerProductos);
+router.get('/contarsolicitudes', formController.contarsolicitudes);
 
-// Ruta para agregar un nuevo producto
-router.post('/products', crudstock.agregarProducto);
 
-// Ruta para actualizar un producto
-router.put('/products/:id', crudstock.actualizarProducto);
+////////////////////     EMPLEADOS      //////////////////////////////////////
 
-// Ruta para eliminar un producto
-router.delete('/products/:id', crudstock.eliminarProducto);
+// Ruta para guardar datos de empleados
+router.post('/guardarempleados', formController.guardarempleados);
+
+// Ruta para obtener empleados
+router.get('/cargarempleados', formController.cargarempleados);
+
+// Ruta para obtener un empleado por idEmpleado
+router.get('/buscarempleados/:idEmpleado', formController.buscarempleados);
+
+// Ruta para obtener un empleado por idEmpleado
+router.put('/actualizarempleado/:idEmpleado', formController.actualizarempleado);
+
+router.delete('/borrarEmpleado/:idEmpleado', formController.borrarempleado);
+
+// Ruta para contar empleados
+router.get("/contarempleados", formController.contarempleados);
+
+/////////////////////    SOLICITUDES     ////////////////////////////////
+
+// Ruta para obtener solicitudes
+router.get('/cargarsolicitudes', formController.cargarsolicitudes);
+
+router.post('/enviarahuesped', formController.enviarahuesped);
+
+router.delete('/borrarsolicitud/:idsolicitudes', formController.borrarsolicitud);
 
 export default router;

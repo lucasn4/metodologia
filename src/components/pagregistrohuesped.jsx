@@ -27,7 +27,7 @@ function Formulario() {
     const [selectedDates, setSelectedDates] = useState([]); 
     const [dateRange, setDateRange] = useState(''); 
     const [successMessage, setSuccessMessage] = useState('');
-    const [numberOfRooms, setNumberOfRooms] = useState(1);    // Almacena el número de habitaciones seleccionadas
+    const [nhabitaciones, setNhabitaciones] = useState(1);    // Almacena el número de habitaciones seleccionadas
     const [errors, setErrors] = useState({});
     const [error, setError] = useState("");  
     const [availabilityError, setAvailabilityError] = useState(false);
@@ -66,17 +66,15 @@ function Formulario() {
             // Formatea las fechas
             const startDate = selectedDates[0].toISOString().split('T')[0];
             const endDate = selectedDates[1].toISOString().split('T')[0];
-    
             // Incluye los datos del huésped y las fechas en el cuerpo de la solicitud
             const response = await fetch('http://localhost:5000/api/guardarDatosYReservarFechas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...formData, startDate, endDate }),
+                body: JSON.stringify({ ...formData, startDate, endDate,nhabitaciones }),
             });
     
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.message); // Mensaje de éxito
                 setSuccessMessage('Datos enviados con éxito'); 
                 // Reinicia el formulario y el estado
                 setFormData({
@@ -97,6 +95,9 @@ function Formulario() {
                 console.error('Error al enviar los datos');
                 setSuccessMessage('Error al enviar los datos'); 
             }
+            console.log('Datos del huésped:', { ...formData });
+            console.log('Fechas:', { startDate, endDate });
+            console.log('Habitaciones reservadas:', nhabitaciones);
         } catch (error) {
             console.error('Error en la solicitud:', error);
             setSuccessMessage('Error al enviar los datos'); 
@@ -146,23 +147,27 @@ function Formulario() {
         }
     
         const data = await response.json();
+        let ban=false;
         let hasError = false;
-    
+        console.log("aqui");
+        console.log(data);
         if (data.length > 0) {
-          console.log('Fechas disponibles:', data);
           for (let i = 0; i < data.length; i++) {
-            console.log(data[i].habitacionesdis);
-            if (data[i].habitacionesdis >= numberOfRooms) {
-              setCurrentStep(3);
+            if (data[i].habitacionesdis >= nhabitaciones) {
+                ban=true;
             }
             else{
-              console.log('No hay disponibilidad para esta fecha: ', formatDate(data[i].fechasdis));
-              setNofechas(formatDate(data[i].fechasdis));
-              hasError = true;
+              ban=false;
             }
           }
+          if(ban){
+            setCurrentStep(3);
+          }
+          else{
+            setNofechas(formatDate(data[i].fechasdis));
+            hasError = true;
+          }
         } else {
-          console.log('No hay disponibilidad para las fechas seleccionadas');
           hasError = true;
         }
         setAvailabilityError(hasError);
@@ -234,8 +239,6 @@ function Formulario() {
         setEnd(e);
       }
     }, [selectedDates]); // El efecto se ejecutará solo cuando cambie `selectedDates`
-    console.log(start);
-    console.log(end);
     return (
         <>
             <Header />
@@ -459,8 +462,8 @@ function Formulario() {
                                 placeholder="Ingrese el numero de habitaciones" 
                                 min={1} 
                                 max={7}
-                                value={numberOfRooms}
-                                onChange={(e) => setNumberOfRooms(Number(e.target.value))}
+                                value={nhabitaciones}
+                                onChange={(e) => setNhabitaciones(Number(e.target.value))}
                                 />
                                 </label>
                                 {availabilityError && (
@@ -530,13 +533,13 @@ function Formulario() {
     <i className="bi bi-cash-coin" style={{ fontSize: '2rem', color: 'white' }}></i>
   </div>
 </div>
-                            <CompPago formData={formData} numberOfRooms={numberOfRooms} start={start} end={end} />
+                            <CompPago formData={formData} nhabitaciones={nhabitaciones} start={start} end={end} />
                             <button type="button" onClick={handleBack2}>
                                 Atrás
                             </button>
                             
                             
-                            <button type="submit">
+                            <button type="submit" onClick={handleSubmit}>
                                 Enviar
                             </button>
                         </>

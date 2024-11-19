@@ -126,7 +126,6 @@ const MetodoPago = ({ items }) => {
 const ResponsiveLayout = ({ formData , numberOfRooms , start , end }) => {
     // Datos de ejemplo para el carrito
     const itemsCarrito = Array.from({ length: numberOfRooms }, (_, index) => ({ nombre: `Habitación ${index + 1}` }));
-    console.log(itemsCarrito);
         return (
         <div className="espacio layout-container">
             <div className="left-section">

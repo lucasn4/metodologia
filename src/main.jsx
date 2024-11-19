@@ -12,6 +12,8 @@ import Admin from './routes/Admin.jsx';
 import Login from './routes/Login.jsx';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Empleados from './components/empleados.jsx';
+import Solicitudes from './routes/solicitudes.jsx';
 
 import Pagregistrohuesped from './components/pagregistrohuesped.jsx';
 
@@ -41,6 +43,22 @@ root.render(
             element={
               <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
                 <Stock />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/empleados" 
+            element={
+              <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+                <Empleados />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/solicitudes" 
+            element={
+              <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+                <Solicitudes />
               </ProtectedRoute>
             } 
           />
