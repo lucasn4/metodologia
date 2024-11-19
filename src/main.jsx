@@ -15,6 +15,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Empleados from './components/empleados.jsx';
 import Solicitudes from './routes/solicitudes.jsx';
 import Estacionamiento from './routes/estacionamiento.jsx';
+import Habitaciones from './routes/habitaciones.jsx';
+import Huespedes from './routes/totalhuespedes.jsx';
 import Pagregistrohuesped from './components/pagregistrohuesped.jsx';
 
 const rootElement = document.getElementById('root');
@@ -37,6 +39,24 @@ root.render(
                 <Admin />
               </ProtectedRoute>
             } 
+          />
+          <Route 
+            path="/admin/habitaciones" 
+            element={
+              <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+                <Habitaciones />
+              </ProtectedRoute>
+            } 
+            
+          />
+          <Route 
+            path="/admin/totalhuespedes" 
+            element={
+              <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+                <Huespedes />
+              </ProtectedRoute>
+            } 
+            
           />
           <Route 
             path="/admin/stock" 

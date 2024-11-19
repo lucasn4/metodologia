@@ -1,10 +1,19 @@
 import express from 'express';
-import { getAllSpots, getHuespedesConVehiculos, assignSpot } from '../controllers/estacionamientoController.js';
+import {  getEstacionamiento } from '../controllers/estacionamientoController.js';
+import {  gethabitacion } from '../controllers/estacionamientoController.js';
 
 const router = express.Router();
 
-router.get('/spots', getAllSpots);
-router.get('/huespedes', getHuespedesConVehiculos);
-router.put('/spots/:id', assignSpot);
+// Ruta para obtener todos los espacios de estacionamiento
+router.get('/estacionamiento', getEstacionamiento);
+
+
+
+// Ruta para obtener todos los espacios de estacionamiento
+router.get('/habitaciones', gethabitacion);
+
+// Ruta para actualizar los espacios de estacionamiento
+//router.put('/habitaciones/actualizar', updateHabitacion);
+
 
 export default router;

@@ -4,7 +4,7 @@ import CardTicket from "../components/CardTicket";
 import styles from "../assets/styles/Estacionamiento.module.css";
 import { Link } from 'react-router-dom';
 
-const Estacionamiento = () => {
+const Huesped = () => {
   const [parkingSpots, setParkingSpots] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSpot, setCurrentSpot] = useState(null);
@@ -13,7 +13,7 @@ const Estacionamiento = () => {
   // Obtener datos del backend
   const fetchParkingSpots = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/estacionamiento");
+      const response = await axios.get("http://localhost:5000/api/habitaciones");
       setParkingSpots(response.data);
     } catch (error) {
       console.error("Error al obtener datos:", error);
@@ -28,8 +28,8 @@ const Estacionamiento = () => {
   const handleCardClick = (spot) => {
     setCurrentSpot(spot);
     setFormData({
-      plate: spot.patenteH || "",
-      model: spot.marcamodeloH || "",
+      plate: spot.vehiculoH === 0 ? "sin vehiculo" : "Con vehiculo",
+      model: spot.telefonoH || "",
       dueno: `${spot.nombreH ?? ""} ${spot.apellidoH ?? ""}`.trim(),
     });
     setIsModalOpen(true);
@@ -52,7 +52,7 @@ const Estacionamiento = () => {
 
   return (
     <div className={styles.estacionamientoContainer}>
-      <h2>Estacionamiento</h2>
+      <h2>Habitaciones</h2>
       <button onClick={handleSave}>Actualizar</button>
 
       <div className={styles.gridContainer}>
@@ -62,11 +62,11 @@ const Estacionamiento = () => {
           <div key={spot.id} onClick={() => handleCardClick(spot)}>
             <CardTicket
               ticket={spot.idHuesped ? "close" : "pending"}
-              totalTickets={spot.idEstacionamiento}
+              totalTickets={"Habitación N° " + spot.idhabitaciones}
               text={
-                spot.patenteH
-                  ? ` ‎‎  ${spot.marcamodeloH}   ‎ ‎ ‎ ‎ ‎ 
-                     ‎ ${spot.patenteH}‎  `
+                spot.idHuesped
+                  ? ` ‎‎  ${spot.nombreH}   ‎ ‎ ‎ ‎ ‎ 
+                     ‎ ${spot.apellidoH}‎  `
                   : "Libre"
               }
             />
@@ -80,8 +80,8 @@ const Estacionamiento = () => {
       <button className={styles.modalClose} onClick={() => setIsModalOpen(false)}>×</button>
       <h3>Informacion</h3>
       <h4>Huésped: {formData.dueno}</h4>
-      <h4>Vehículo: {formData.model} </h4>
-      <h4>Patente: {formData.plate}</h4>
+      <h4>Telefono: {formData.model} </h4>
+      <h4>Vehiculo: {formData.plate}</h4>
 
 
     </div>
@@ -96,4 +96,4 @@ const Estacionamiento = () => {
 };
 
 
-export default Estacionamiento;
+export default Huesped;

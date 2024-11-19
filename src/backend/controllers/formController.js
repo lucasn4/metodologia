@@ -142,6 +142,21 @@ const formController = {
                         res.status(400).json({ message: 'Error al asignar habitaciones o no todas están disponibles' });
                     });
                 }
+            // Paso 3: Asignar estacionamiento al huésped
+            const queryestacionamiento = `
+                UPDATE estacionamiento10filas 
+                SET idHuesped = ? 
+                WHERE idestacionamiento IN (?)
+            `;
+            
+            if(vehiculoH === 1){
+            connection.query(queryestacionamiento, [idHuesped, habitacionSeleccionada], (error, results) => {
+                if (error || results.affectedRows !== habitacionSeleccionada.length) {
+                    return connection.rollback(() => {
+                        res.status(400).json({ message: 'Error al asignar habitaciones o no todas están disponibles' });
+                    });
+                }
+            
 
                 // Paso 3: Confirmar la transacción
                 connection.commit((err) => {
@@ -152,6 +167,7 @@ const formController = {
                     }
                     res.status(200).json({ message: 'Datos y habitaciones guardados con éxito' });
                 });
+              });}
             });
         });
     });
@@ -318,9 +334,233 @@ contarempleados: (req, res) => {
 
     res.status(200).json({ totalEmpleados: results[0].total });
   });
+},
+
+  ////////////////////////          STOCK             //////////////////////////////
+  guardarproducto: (req, res) => {
+    const { Producto, TipodeProducto, Cantidad } = req.body;
+
+    connection.beginTransaction((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error al iniciar la transacción' });
+        }
+
+        // Insertar datos en la tabla empleados
+        const queryEmp = `
+            INSERT INTO stock (Producto, TipodeProducto, Cantidad) 
+            VALUES (?, ?, ?)
+        `;
+        const valuesEmp = [Producto, TipodeProducto, Cantidad];
+        connection.query(queryEmp, valuesEmp, (error, results) => {
+            if (error) {
+                return connection.rollback(() => {
+                    res.status(500).json({ message: 'Error al guardar los datos de producto' });
+                });
+            }
+
+            connection.commit((err) => {
+                if (err) {
+                    return connection.rollback(() => {
+                        res.status(500).json({ message: 'Error al finalizar la transacción' });
+                    });
+                }
+                res.status(200).json({ message: 'Datos guardados con éxito' });
+            });
+        });
+    });
+},
+
+cargarproducto: (req, res) => {
+  const query = `
+      SELECT idProducto, Producto, TipodeProducto, Cantidad
+      FROM stock
+  `;
+  
+  connection.query(query, (error, results) => {
+      if (error) {
+          console.error('Error al obtener los productos:', error);
+          return res.status(500).json({ message: 'Error al obtener productos' });
+      }
+      res.status(200).json(results);
+  });
+},
+
+buscarproducto: (req, res) => {
+  const { idProducto } = req.params; // Recibimos el idEmpleado desde los parámetros de la URL
+  const query = `
+      SELECT idProducto, Producto, TipodeProducto, Cantidad
+      FROM stock
+      WHERE idProducto = ?`; // Filtramos por el idEmpleado
+  
+  connection.query(query, [idProducto], (error, results) => {
+      if (error) {
+          console.error('Error al obtener los productos:', error);
+          return res.status(500).json({ message: 'Error al obtener el producto' });
+      }
+      if (results.length === 0) {
+          return res.status(404).json({ message: 'Producto no encontrado' });
+      }
+      res.status(200).json(results); // Enviamos solo un producto (el primero que coincide)
+  });
+},
+actualizarproducto:  async (req, res) => {
+  const { idProducto } = req.params;
+  const { Producto, TipodeProducto, Cantidad } = req.body;
+
+  try {
+    const query = `
+      UPDATE stock
+      SET Producto = ?, TipodeProducto = ?, Cantidad = ?
+      WHERE idProducto = ?
+    `;
+    
+      // Usamos query con promesa para usar async/await
+      connection.query(query, [Producto, TipodeProducto, Cantidad, idProducto], (error, results) => {
+        if (error) {
+          console.error('Error en la actualización:', error);
+          return res.status(500).json({ message: 'Error en la actualización del producto' });
+        }
+        
+        if (results.affectedRows > 0) {
+          res.status(200).json({ message: 'Producto actualizado correctamente' });
+        } else {
+          res.status(404).json({ message: 'Producto no encontrado' });
+        }
+      });
+    } catch (error) {
+      console.error('Error en la actualización:', error);
+      res.status(500).json({ message: 'Error en la actualización del producto' });
+    }
+},
+borrarproducto: async (req, res) => {
+  const { idProducto } = req.params; // Obtiene el id del producto de los parámetros de la solicitud
+
+  try {
+    const query = `
+      DELETE FROM stock WHERE idProducto = ?
+    `;
+    
+    // Usamos query con promesa para usar async/await
+    connection.query(query, [idProducto], (error, results) => {
+      if (error) {
+        console.error('Error en la eliminación:', error);
+        return res.status(500).json({ message: 'Error en la eliminación del producto' });
+      }
+
+      if (results.affectedRows > 0) {
+        res.status(200).json({ message: 'Producto eliminado correctamente' });
+      } else {
+        res.status(404).json({ message: 'Producto no encontrado' });
+      }
+    });
+  } catch (error) {
+    console.error('Error en la eliminación:', error);
+    res.status(500).json({ message: 'Error en la eliminación del producto' });
+  }
+},
+// Función para contar los productos
+contarproducto: (req, res) => {
+  const query = "SELECT COUNT(*) as total FROM stock";
+
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error("Error al contar productos:", error);
+      return res.status(500).json({ error: "Error al contar productos" });
+    }
+
+    res.status(200).json({ totalProductos: results[0].total });
+  });
+},
+
+//////////////////// Estacionamiento ///////////////////////
+contarestacionamiento: (req, res) => {
+  const query = "SELECT COUNT(*) as total FROM estacionamiento10filas WHERE idHuesped IS NOT NULL";
+
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error("Error al contar vehiculos estacionados:", error);
+      return res.status(500).json({ error: "Error al contar vehiculos estacionados" });
+    }
+
+    res.status(200).json({ totalestacionamiento: results[0].total });
+  });
+},
+
+//////////////////// Huesped ///////////////////////
+
+cargarhuesped: (req, res) => {
+  const query = `
+      SELECT idHuesped, nombreH, apellidoH, telefonoH, emailH, vehiculoH, tipoH, marcamodeloH, colorH, patenteH
+      FROM huesped
+  `;
+  
+  connection.query(query, (error, results) => {
+      if (error) {
+          console.error('Error al obtener las huesped:', error);
+          return res.status(500).json({ message: 'Error al obtener huesped' });
+      }
+      res.status(200).json(results);
+  });
+},
+contarhuesped: (req, res) => {
+  const query = "SELECT COUNT(*) as total FROM huesped";
+
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error("Error al contar huespedes:", error);
+      return res.status(500).json({ error: "Error al contar huespedes" });
+    }
+
+    res.status(200).json({ totalhuespedes: results[0].total });
+  });
+},
+buscarhuesped: (req, res) => {
+  const { idHuesped } = req.params; // Recibimos el idEmpleado desde los parámetros de la URL
+  const query = `
+      SELECT idHuesped, nombreH, apellidoH, telefonoH, emailH, vehiculoH, tipoH, marcamodeloH, colorH, patenteH 
+      FROM huesped
+      WHERE idHuesped = ?`; // Filtramos por el idEmpleado
+  
+  connection.query(query, [idHuesped], (error, results) => {
+      if (error) {
+          console.error('Error al obtener los huespedes:', error);
+          return res.status(500).json({ message: 'Error al obtener el huesped' });
+      }
+      if (results.length === 0) {
+          return res.status(404).json({ message: 'Huesped no encontrado' });
+      }
+      res.status(200).json(results); // Enviamos solo un huesped (el primero que coincide)
+  });
+},
+borrarhuesped: async (req, res) => {
+  const { idHuesped } = req.params; // Obtiene el id del producto de los parámetros de la solicitud
+
+  try {
+    const query = `
+      DELETE FROM huesped WHERE idHuesped = ?
+    `;
+    
+    // Usamos query con promesa para usar async/await
+    connection.query(query, [idHuesped], (error, results) => {
+      if (error) {
+        console.error('Error en la eliminación:', error);
+        return res.status(500).json({ message: 'Error en la eliminación del huesped' });
+      }
+
+      if (results.affectedRows > 0) {
+        res.status(200).json({ message: 'Huesped eliminado correctamente' });
+      } else {
+        res.status(404).json({ message: 'huesped no encontrado' });
+      }
+    });
+  } catch (error) {
+    console.error('Error en la eliminación:', error);
+    res.status(500).json({ message: 'Error en la eliminación del huesped' });
+  }
 }
-
-
 };
+
+
+
 
 export default formController;

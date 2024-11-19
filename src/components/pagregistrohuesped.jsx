@@ -34,6 +34,7 @@ function Formulario() {
     const [nofechas, setNofechas] = useState([]);
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
+    const [fechaconflicto, setFechaconflicto] = useState('');
     // Almacena el mensaje de error
 
     const formatDate = (date) => {
@@ -150,14 +151,17 @@ function Formulario() {
         let ban=false;
         let hasError = false;
         console.log("aqui");
-        console.log(data);
         if (data.length > 0) {
           for (let i = 0; i < data.length; i++) {
+            console.log(data[i].habitacionesdis, nhabitaciones,data[i].fechasdis);
             if (data[i].habitacionesdis >= nhabitaciones) {
                 ban=true;
             }
             else{
               ban=false;
+              setFechaconflicto(data[i].fechasdis);
+              break;
+
             }
           }
           if(ban){
@@ -469,7 +473,7 @@ function Formulario() {
                                 {availabilityError && (
                                 <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>
                                 No hay disponibilidad en una de las fechas seleccionadas ( 
-                                {nofechas} fecha(s) sin disponibilidad).
+                                {formatDate(fechaconflicto)}).
                                 </span>
                                 )}
                             </div>

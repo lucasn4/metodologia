@@ -32,57 +32,95 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s ease;
   }
   
-  .modal {
-    background-color: #1f2937;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    width: 100%;
-    color: white;
-    position: relative;
-  }
-  
-  .modal h2 {
-    margin-bottom: 1rem;
-  }
-  
-  .modal input {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border-radius: 0.5rem;
-    border: none;
-    background-color: #374151;
-    color: white;
-  }
-  
-  .modal button {
-    background-color:#374151; ;
-    color: white;
-    padding: 0.3rem 0.5rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    
-    transition: background-color 0.2s;
-    align-items: center;
+.modalOverlay.showModal {
+  opacity: 1; /* Se muestra cuando la clase `showModal` se agrega */
+}
 
-  }
-  
-  .modal button:last-child {
-    background-color: #ef4444;
-  }
-  
-  .modalClose {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: white;
-    cursor: pointer;
-  }
+/* Modal */
+.modal {
+  background-color: #1f2937;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  color: white;
+  position: relative;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: translateY(-20px); /* Inicia ligeramente fuera de la vista */
+  opacity: 0; /* Inicia oculto */
+}
+
+.modal.showModal {
+  transform: translateY(0); /* Se mueve al centro cuando la clase `showModal` se agrega */
+  opacity: 1; /* Se hace visible */
+}
+
+/* Modal Header */
+.modal h2 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: #10b981;
+  text-align: center;
+}
+
+/* Inputs del modal */
+.modal input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #374151;
+  color: white;
+  font-size: 1rem;
+}
+
+/* Botones del modal */
+.modal button {
+  background-color: #10b981;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Botón de cancelar */
+.modal button:last-child {
+  background-color: #ef4444;
+}
+
+.modal button:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+}
+
+/* Botón de cancelar hover */
+.modal button:last-child:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* Cerrar el modal */
+.modalClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.modalClose:hover {
+  transform: rotate(90deg);
+}

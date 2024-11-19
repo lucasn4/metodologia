@@ -8,8 +8,12 @@ import '../assets/styles/admin.css';  // Importa el archivo CSS
 
 
 const Admin = () => {
+  const [totalhuespedes, setTotalhuespedes] = useState(null);
   const [totalSolicitudes, setTotalSolicitudes] = useState(null);
   const [totalEmpleados, setTotalEmpleados] = useState(null);
+  const [totalProductos, setTotalProductos] = useState(null);
+  const [nhuesped, setNhuesped] = useState(null);
+  const [totalestacionamiento, setTotalestacionamiento] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -39,8 +43,67 @@ const Admin = () => {
               setError("No se pudo obtener el total de empleados.");
           }
       };
+      const obtenerTotalstock = async () => {
+          try {
+              const response = await fetch("http://localhost:5000/api/contarproducto");
+              if (!response.ok) {
+                  throw new Error("Error al obtener los datos del servidor");
+              }
+              const data = await response.json();
+              setTotalProductos(data.totalProductos);
+          } catch (err) {
+              console.error("Error al obtener el total de stock:", err);
+              setError("No se pudo obtener el total de stock.");
+          }
+      };
+      const obtenerTotalestacionamiento = async () => {
+          try {
+              const response = await fetch("http://localhost:5000/api/contarestacionamiento");
+              if (!response.ok) {
+                  throw new Error("Error al obtener los datos del servidor");
+              }
+              const data = await response.json();
+              setTotalestacionamiento(data.totalestacionamiento);
+          } catch (err) {
+              console.error("Error al obtener el total de estacionamiento:", err);
+              setError("No se pudo obtener el total de estacionamiento.");
+          }
+      };
+      const obtenerTotalhuesped = async () => {
+          try {
+              const response = await fetch("http://localhost:5000/api/contarhuesped");
+              if (!response.ok) {
+                  throw new Error("Error al obtener los datos del servidor");
+              }
+              const data = await response.json();
+              setTotalhuespedes(data.totalhuespedes);
+          } catch (err) {
+              console.error("Error al obtener el total de huesped:", err);
+              setError("No se pudo obtener el total de huesped.");
+          }
+      };
+
+      
+      const obtenernhuesped = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/api/nhuesped");
+            if (!response.ok) {
+                throw new Error("Error al obtener los datos del servidor");
+            }
+            const data = await response.json();
+            setNhuesped(data.nhuesped);
+        } catch (err) {
+            console.error("Error al obtener el total de huesped:", err);
+            setError("No se pudo obtener el total de huesped.");
+        }
+    };
       obtenersolicitudes();
       obtenerTotalEmpleados();
+      obtenerTotalstock();
+      obtenerTotalestacionamiento();
+      obtenerTotalhuesped();//son las habitaciones
+      
+      obtenernhuesped();
   }, []);
 
   return (
@@ -50,26 +113,26 @@ const Admin = () => {
       </div>
       <div className="card-grid">
         <CardTicket
-          ticket="Huespedes"
-          totalTickets="Huespedes"
-          text="3"
-          Linkpagina="/admin/huespedes"
+          ticket="Habitaciones"
+          totalTickets="Habitaciones"
+          text={totalhuespedes !== null ? totalhuespedes : "Cargando..."}
+          Linkpagina="/admin/habitaciones"
         />
         <CardTicket
-          ticket="habitaciones"
-          totalTickets="habitaciones disponibles"
-          text="3"
-          Linkpagina="/admin/habitaciones"
+          ticket="Huespedes"
+          totalTickets="Huespedes"
+          text={totalhuespedes !== null ? totalhuespedes : "Cargando..."}
+          Linkpagina="/admin/totalhuespedes"
         />
         <CardTicket
           ticket="Inventario"
           totalTickets="Inventario"
-          text="912"
+          text={totalProductos !== null ? totalProductos : "Cargando..."}
           Linkpagina="/admin/stock"
         />
         <CardTicket
           ticket="solicitudes pendientes"
-          totalTickets="SOLICITUDES"
+          totalTickets="Solicitudes"
           text={totalSolicitudes !== null ? totalSolicitudes : "Cargando..."}
           Linkpagina="/admin/solicitudes"
         />
@@ -82,74 +145,9 @@ const Admin = () => {
          <CardTicket
           ticket="estacionamiento"
           totalTickets="estacionamiento"
-          text= "3"
+          text={totalestacionamiento !== null ? totalestacionamiento : "Cargando..."}
           Linkpagina="/admin/estacionamiento"
         />
-      </div>
-      <div>
-        <h1 className="title">notificaciones</h1>
-      </div>
-      <div className="notification-section">
-        <div className="table-header hidden md:grid grid-cols-1 md:grid-cols-5 gap-4 mb-10 p-4">
-          <h5>ID</h5>
-          <h5>Descripción</h5>
-          <h5>Check In</h5>
-          <h5>Check Out</h5>
-          <h5>Acciones</h5>
-        </div>
-        {/* Itera por tus solicitudes */}
-        {[...Array(3)].map((_, index) => (
-          <div key={index} className="request-card grid grid-cols-1 md:grid-cols-5 gap-4 items-center mb-4 bg-secondary-900 p-4 rounded-xl">
-            <div>
-              <h5 className="md:hidden text-white font-bold mb-2">ID</h5>
-              <span>#25546</span>
-            </div>
-            <div>
-              <h5 className="md:hidden text-white font-bold mb-2">Descripción</h5>
-              <p>Descripción de solicitud</p>
-            </div>
-            <div>
-              <h5 className="md:hidden text-white font-bold mb-2">Check In</h5>
-              <span>FECHA DD/MM/AA</span>
-            </div>
-            <div>
-              <h5 className="md:hidden text-white font-bold mb-2">Check Out</h5>
-              <span>03/04/24</span>
-            </div>
-            <div>
-              <h5 className="md:hidden text-white font-bold mb-2">Acciones</h5>
-              <Menu
-                menuButton={
-                  <MenuButton className="menu-button">
-                    Acciones
-                  </MenuButton>
-                }
-                align="end"
-                arrow
-                arrowClassName="bg-secondary-100"
-                transition
-                menuClassName="bg-secondary-100 p-4"
-              >
-                <MenuItem className="menu-item">
-                  <Link
-                    to="/perfil"
-                    className="link-item"
-                  >
-                    Dashboard tickets
-                  </Link>
-                </MenuItem>
-                <MenuItem className="menu-item">
-                  <Link
-                    to="/perfil"
-                    className="link-item"
-                  >
-                    Información
-                  </Link>
-                </MenuItem>
-              </Menu>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );

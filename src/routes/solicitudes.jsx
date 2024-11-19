@@ -9,21 +9,22 @@ export const solicitudes = () => {
   const [selectedSolicitud, setSelectedSolicitud] = useState(null); // Estado para almacenar la solicitud seleccionada
   const [habitacionSeleccionada, setHabitacionSeleccionada] = useState([]); // Estado para las habitaciones seleccionadas
   const [successMessage, setSuccessMessage] = useState('');
-  
-  useEffect(() => {
-    const obtenerSolicitudes = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/cargarsolicitudes');
-        if (!response.ok) {
-          throw new Error('Error al obtener los datos del servidor');
-        }
-        const data = await response.json();
-        setSolicitudes(data);
-        console.log(data);
-      } catch (error) {
-        console.error('Error al obtener las solicitudes:', error);
+  const obtenerSolicitudes = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/cargarsolicitudes');
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos del servidor');
       }
-    };
+      const data = await response.json();
+      setSolicitudes(data);
+      console.log(data);
+    } catch (error) {
+      console.error('Error al obtener las solicitudes:', error);
+    }
+  };
+
+  useEffect(() => {
+    
     obtenerSolicitudes();
   }, []);
 
@@ -59,8 +60,10 @@ export const solicitudes = () => {
           if (response.ok) {
               const data = await response.json();
               setSuccessMessage('Se ha registrado un huesped con éxito'); 
+              setTimeout(() => setSuccessMessage(''), 3000); // El mensaje desaparecerá después de 3 segundos
               setSelectedSolicitud([]);
               borrarsolicitudes();
+              setSelectedSolicitud(null); // Restablecer la solicitud seleccionada
           } else {
               console.error('Error al enviar los datos');
           }
@@ -84,7 +87,8 @@ export const solicitudes = () => {
     
         if (response.ok) {
           const data = await response.json();
-    
+          obtenerSolicitudes();
+          setSelectedSolicitud(null); // Restablecer la solicitud seleccionada
           // Recargar la lista de empleados después de la eliminación
         } else {
           // Si hubo un error en la solicitud, mostrar el mensaje de error
@@ -178,14 +182,14 @@ export const solicitudes = () => {
               {habitacionSeleccionada.length === selectedSolicitud.nhabitaciones && (
                 <div style={{ marginTop: '20px' }}>
                   <button onClick={enviar} style={{ marginRight: '10px' }}>Aprobar</button>
-                  <button style={{ marginRight: '10px' }}>Rechazar</button>
+                  <button  onClick={borrarsolicitudes}style={{ marginRight: '10px' }}>Rechazar</button>
                 
-            {successMessage && <p style={{ color: 'green', marginTop: '2%', backgroundColor: 'lightgreen' }}>{successMessage}</p>}
                 </div>
               )}
             </div>
           </>
         )}
+        {successMessage && <p style={{ color: 'green', marginTop: '2%', backgroundColor: 'lightgreen' }}>{successMessage}</p>}
       </div>
       <Link to="/admin" className='a'>
         <button style={{ position: 'fixed', bottom: '3%', right: '3%', width: '10%' }}>ATRAS</button>
