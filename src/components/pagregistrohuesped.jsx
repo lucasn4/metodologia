@@ -65,27 +65,64 @@ function Formulario() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-          // Asegúrate de que haya dos fechas seleccionadas
           if (selectedDates.length !== 2) {
               console.warn("Debe seleccionar un rango de dos fechas.");
               return;
           }
   
-          // Formatea las fechas
+          if (!metodoPago) {
+              setSuccessMessage('Error: Debe seleccionar un método de pago');
+              return;
+          }
+  
           const startDate = selectedDates[0].toISOString().split('T')[0];
           const endDate = selectedDates[1].toISOString().split('T')[0];
   
-          // Incluye los datos del huésped, fechas y número de habitaciones en el cuerpo de la solicitud
+          const payload = { 
+              ...formData, 
+              startDate, 
+              endDate,
+              habitacionesReservadas: numberOfRooms,
+              metodoPago 
+          };
+  
+          console.log("Payload de la solicitud:", payload);
+  
           const response = await fetch('http://localhost:5000/api/guardarDatosYReservarFechas', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ 
-                  ...formData, 
-                  startDate, 
-                  endDate,
-                  habitacionesReservadas: numberOfRooms // Añadimos el número de habitaciones
-              }),
+              body: JSON.stringify(payload),
           });
+  
+          if (!response.ok) {
+              const errorData = await response.json();
+              console.error('Error al enviar los datos:', errorData.message);
+              setSuccessMessage(`Error: ${errorData.message}`);
+              return;
+          }
+  
+          const data = await response.json();
+          console.log('Solicitud y pago creados:', data);
+          setSuccessMessage('Datos enviados con éxito');
+  
+          // Reiniciar todos los estados
+          setFormData({
+              nombreH: '',
+              apellidoH: '',
+              telefonoH: '',
+              emailH: '',
+              vehiculoH: false,
+              tipoH: '',
+              marcamodeloH: '',
+              colorH: '',
+              patenteH: ''
+          });
+          setSelectedDates([]);
+          setDateRange('');
+          setCurrentStep(1);
+          setMetodoPago("");
+          setFile(null);
+          setFileChosen("Ningún archivo seleccionado");
   
           // Lógica de envío a gmail
           const formDataToSend = new FormData();
@@ -99,6 +136,7 @@ function Formulario() {
                   Teléfono: ${formData.telefonoH}
                   Email: ${formData.emailH}
                   Pago: ${metodoPago}
+                  Estado del Pago: Pendiente
                   Habitaciones Reservadas: ${numberOfRooms}
                   Fecha de entrada: ${startDate}
                   Fecha de salida: ${endDate}
@@ -121,33 +159,6 @@ function Formulario() {
               }
           );
   
-          if (response.ok) {
-              const data = await response.json();
-              console.log(data.message);
-              setSuccessMessage('Datos enviados con éxito');
-              // Reinicia el formulario y el estado
-              setFormData({
-                  nombreH: '',
-                  apellidoH: '',
-                  telefonoH: '',
-                  emailH: '',
-                  vehiculoH: false,
-                  tipoH: '',
-                  marcamodeloH: '',
-                  colorH: '',
-                  patenteH: ''
-              });
-              setSelectedDates([]);
-              setDateRange('');
-              setCurrentStep(1);
-              setMetodoPago(""); // Reiniciar método de pago
-              setFile(null); // Reiniciar archivo
-              setFileChosen("Ningún archivo seleccionado"); // Reiniciar nombre del archivo
-          } else {
-              const errorData = await response.json();
-              console.error('Error al enviar los datos:', errorData.message);
-              setSuccessMessage(`Error: ${errorData.message}`);
-          }
       } catch (error) {
           console.error('Error en la solicitud:', error);
           setSuccessMessage('Error al enviar los datos');

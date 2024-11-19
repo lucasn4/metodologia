@@ -27,9 +27,22 @@ const formController = {
       res.status(200).json(results);
     });
   },
-
   guardarDatosYReservarFechas: (req, res) => {
-    const { nombreH, apellidoH, telefonoH, emailH, vehiculoH, tipoH, marcamodeloH, colorH, patenteH, startDate, endDate, habitacionesReservadas } = req.body;
+    const { 
+      nombreH, 
+      apellidoH, 
+      telefonoH, 
+      emailH, 
+      vehiculoH, 
+      tipoH, 
+      marcamodeloH, 
+      colorH, 
+      patenteH, 
+      startDate, 
+      endDate, 
+      habitacionesReservadas,
+      metodoPago  // Nuevo parámetro
+    } = req.body;
 
     connection.beginTransaction((err) => {
       if (err) {
@@ -42,33 +55,62 @@ const formController = {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       const valuesHuesped = [nombreH, apellidoH, telefonoH, emailH, vehiculoH, tipoH, marcamodeloH, colorH, patenteH];
-      connection.query(queryHuesped, valuesHuesped, (error, results) => {
+      
+      connection.query(queryHuesped, valuesHuesped, (error, solicitudResults) => {
         if (error) {
           return connection.rollback(() => {
             res.status(500).json({ message: 'Error al guardar los datos del huésped' });
           });
         }
 
-        // Actualizar habitaciones disponibles
-        const queryFechas = `
-          UPDATE fechas_disponibles 
-          SET habitacionesdis = habitacionesdis - ? 
-          WHERE fechasdis BETWEEN ? AND ? AND habitacionesdis >= ?
+        // Obtener el ID de la solicitud recién creada
+        const idsolicitud = solicitudResults.insertId;
+
+        // Insertar registro en la tabla pagos
+        const queryPago = `
+          INSERT INTO pagos (idsolicitud, estado, fecha_pago, tipo)
+          VALUES (?, ?, ?, ?)
         `;
-        connection.query(queryFechas, [habitacionesReservadas, startDate, endDate, habitacionesReservadas], (error, results) => {
-          if (error || results.affectedRows < (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24) + 1) {
+        const valuesPago = [
+          idsolicitud,
+          false, // estado inicial como no pagado
+          new Date(), // fecha actual
+          metodoPago
+        ];
+
+        connection.query(queryPago, valuesPago, (errorPago, pagosResults) => {
+          if (errorPago) {
             return connection.rollback(() => {
-              res.status(400).json({ message: 'Error al reservar fechas o disponibilidad insuficiente' });
+              res.status(500).json({ message: 'Error al guardar los datos del pago' });
             });
           }
 
-          connection.commit((err) => {
-            if (err) {
+          // Actualizar habitaciones disponibles
+          const queryFechas = `
+            UPDATE fechas_disponibles 
+            SET habitacionesdis = habitacionesdis - ? 
+            WHERE fechasdis BETWEEN ? AND ? AND habitacionesdis >= ?
+          `;
+          
+          connection.query(queryFechas, [habitacionesReservadas, startDate, endDate, habitacionesReservadas], (errorFechas, results) => {
+            if (errorFechas || results.affectedRows < (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24) + 1) {
               return connection.rollback(() => {
-                res.status(500).json({ message: 'Error al finalizar la transacción' });
+                res.status(400).json({ message: 'Error al reservar fechas o disponibilidad insuficiente' });
               });
             }
-            res.status(200).json({ message: 'Datos y fechas guardados con éxito' });
+
+            connection.commit((errCommit) => {
+              if (errCommit) {
+                return connection.rollback(() => {
+                  res.status(500).json({ message: 'Error al finalizar la transacción' });
+                });
+              }
+              res.status(200).json({ 
+                message: 'Datos guardados con éxito',
+                solicitudId: idsolicitud,
+                pagoId: pagosResults.insertId
+              });
+            });
           });
         });
       });
