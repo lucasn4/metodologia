@@ -63,85 +63,96 @@ function Formulario() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            // Asegúrate de que haya dos fechas seleccionadas
-            if (selectedDates.length !== 2) {
-                console.warn("Debe seleccionar un rango de dos fechas.");
-                return;
-            }
-    
-            // Formatea las fechas
-            const startDate = selectedDates[0].toISOString().split('T')[0];
-            const endDate = selectedDates[1].toISOString().split('T')[0];
-    
-            // Incluye los datos del huésped y las fechas en el cuerpo de la solicitud
-            const response = await fetch('http://localhost:5000/api/guardarDatosYReservarFechas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...formData, startDate, endDate }),
-            });
-    /////////////////////////////////////////////////logica de envio a gmail
-            const formDataToSend = new FormData();
-            formDataToSend.append("to", "programacionprueba99@gmail.com");
-            formDataToSend.append("subject", "Nueva Reserva");
-            formDataToSend.append(
-                "text",
-                `Información de el Huesped; PAGO
-                    Nombre: ${formData.nombreH}
-                    Apellido: ${formData.apellidoH}
-                    Teléfono: ${formData.telefonoH}
-                    Email: ${formData.emailH}
-                    Pago: ${metodoPago}
-                    ${formData.vehiculoH ? `Vehículo: Sí` : `Vehículo: No`}
-                    ${formData.vehiculoH ? `Tipo de vehículo: ${formData.tipoH}` : ""}
-                    ${formData.vehiculoH ? `Marca y modelo: ${formData.marcamodeloH}` : ""}
-                    ${formData.vehiculoH ? `Color: ${formData.colorH}` : ""}
-                    ${formData.vehiculoH ? `Patente: ${formData.patenteH}` : ""}`
-            );
-
-            if (file) {
-                formDataToSend.append("attachment", file);
-            }
-
-            const response2 = await fetch(
-                "http://localhost:5000/api/email/send-email",
-                {
-                    method: "POST",
-                    body: formDataToSend,
-                }
-            );
-
-/////////////////////////////////////////////////////
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data.message); // Mensaje de éxito
-                setSuccessMessage('Datos enviados con éxito'); 
-                // Reinicia el formulario y el estado
-                setFormData({
-                    nombreH: '',
-                    apellidoH: '',
-                    telefonoH: '',
-                    emailH: '',
-                    vehiculoH: false,
-                    tipoH: '',
-                    marcamodeloH: '',
-                    colorH: '',
-                    patenteH: ''
-                });
-                setSelectedDates([]);
-                setDateRange('');
-                setCurrentStep(1); // Vuelve al primer paso del formulario
-            } else {
-                console.error('Error al enviar los datos');
-                setSuccessMessage('Error al enviar los datos'); 
-            }
-        } catch (error) {
-            console.error('Error en la solicitud:', error);
-            setSuccessMessage('Error al enviar los datos'); 
-        }
-    };
+      e.preventDefault();
+      try {
+          // Asegúrate de que haya dos fechas seleccionadas
+          if (selectedDates.length !== 2) {
+              console.warn("Debe seleccionar un rango de dos fechas.");
+              return;
+          }
+  
+          // Formatea las fechas
+          const startDate = selectedDates[0].toISOString().split('T')[0];
+          const endDate = selectedDates[1].toISOString().split('T')[0];
+  
+          // Incluye los datos del huésped, fechas y número de habitaciones en el cuerpo de la solicitud
+          const response = await fetch('http://localhost:5000/api/guardarDatosYReservarFechas', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                  ...formData, 
+                  startDate, 
+                  endDate,
+                  habitacionesReservadas: numberOfRooms // Añadimos el número de habitaciones
+              }),
+          });
+  
+          // Lógica de envío a gmail
+          const formDataToSend = new FormData();
+          formDataToSend.append("to", "programacionprueba99@gmail.com");
+          formDataToSend.append("subject", "Nueva Reserva");
+          formDataToSend.append(
+              "text",
+              `Información de el Huesped; PAGO
+                  Nombre: ${formData.nombreH}
+                  Apellido: ${formData.apellidoH}
+                  Teléfono: ${formData.telefonoH}
+                  Email: ${formData.emailH}
+                  Pago: ${metodoPago}
+                  Habitaciones Reservadas: ${numberOfRooms}
+                  Fecha de entrada: ${startDate}
+                  Fecha de salida: ${endDate}
+                  ${formData.vehiculoH ? `Vehículo: Sí` : `Vehículo: No`}
+                  ${formData.vehiculoH ? `Tipo de vehículo: ${formData.tipoH}` : ""}
+                  ${formData.vehiculoH ? `Marca y modelo: ${formData.marcamodeloH}` : ""}
+                  ${formData.vehiculoH ? `Color: ${formData.colorH}` : ""}
+                  ${formData.vehiculoH ? `Patente: ${formData.patenteH}` : ""}`
+          );
+  
+          if (file) {
+              formDataToSend.append("attachment", file);
+          }
+  
+          const response2 = await fetch(
+              "http://localhost:5000/api/email/send-email",
+              {
+                  method: "POST",
+                  body: formDataToSend,
+              }
+          );
+  
+          if (response.ok) {
+              const data = await response.json();
+              console.log(data.message);
+              setSuccessMessage('Datos enviados con éxito');
+              // Reinicia el formulario y el estado
+              setFormData({
+                  nombreH: '',
+                  apellidoH: '',
+                  telefonoH: '',
+                  emailH: '',
+                  vehiculoH: false,
+                  tipoH: '',
+                  marcamodeloH: '',
+                  colorH: '',
+                  patenteH: ''
+              });
+              setSelectedDates([]);
+              setDateRange('');
+              setCurrentStep(1);
+              setMetodoPago(""); // Reiniciar método de pago
+              setFile(null); // Reiniciar archivo
+              setFileChosen("Ningún archivo seleccionado"); // Reiniciar nombre del archivo
+          } else {
+              const errorData = await response.json();
+              console.error('Error al enviar los datos:', errorData.message);
+              setSuccessMessage(`Error: ${errorData.message}`);
+          }
+      } catch (error) {
+          console.error('Error en la solicitud:', error);
+          setSuccessMessage('Error al enviar los datos');
+      }
+  };
     
     
     //const isStepOneComplete = formData.nombreH && formData.apellidoH && formData.telefonoH && formData.emailH;
