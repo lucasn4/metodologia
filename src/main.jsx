@@ -14,7 +14,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Empleados from './components/empleados.jsx';
 import Solicitudes from './routes/solicitudes.jsx';
-
+import Estacionamiento from './routes/estacionamiento.jsx';
 import Pagregistrohuesped from './components/pagregistrohuesped.jsx';
 
 const rootElement = document.getElementById('root');
@@ -45,6 +45,17 @@ root.render(
                 <Stock />
               </ProtectedRoute>
             } 
+            
+          />
+
+          <Route 
+          path="/admin/estacionamiento" 
+          element={
+            <ProtectedRoute> {/* Envuelves la ruta con ProtectedRoute */}
+            <Estacionamiento />
+            </ProtectedRoute>
+          }
+
           />
           <Route 
             path="/admin/empleados" 

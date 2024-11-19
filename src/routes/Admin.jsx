@@ -77,7 +77,13 @@ const Admin = () => {
           ticket="solicitudes pendientes"
           totalTickets="Empleados"
           text={totalEmpleados !== null ? totalEmpleados : "Cargando..."}
-          Linkpagina="/admin/empleados"
+          Linkpagina="/admin/empleados"/>
+
+         <CardTicket
+          ticket="estacionamiento"
+          totalTickets="estacionamiento"
+          text= "3"
+          Linkpagina="/admin/estacionamiento"
         />
       </div>
       <div>
