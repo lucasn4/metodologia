@@ -82,7 +82,7 @@ function Formulario() {
             const response = await fetch('http://localhost:5000/api/guardarDatosYReservarFechas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...formData, startDate, endDate,nhabitaciones }),
+                body: JSON.stringify({ ...formData, startDate, endDate,nhabitaciones,metodoPago }),
             });
     
             if (response.ok) {
