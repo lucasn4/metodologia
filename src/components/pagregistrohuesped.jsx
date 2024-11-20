@@ -9,6 +9,13 @@ import '../assets/styles/reservafechas.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Formulario() {
+  const [metodoPago, setMetodoPago] = useState("");
+  const [file, setFile] = useState(null);
+  const [fileChosen, setFileChosen] = useState("Ningún archivo seleccionado");
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+    setFileChosen(event.target.files[0].name);
+};
     const [formData, setFormData] = useState({
         nombreH: '',
         apellidoH: '',
@@ -63,6 +70,10 @@ function Formulario() {
                 console.warn("Debe seleccionar un rango de dos fechas.");
                 return;
             }
+            if (!metodoPago) {
+              setSuccessMessage('Error: Debe seleccionar un método de pago');
+              return;
+          }
     
             // Formatea las fechas
             const startDate = selectedDates[0].toISOString().split('T')[0];
@@ -99,6 +110,69 @@ function Formulario() {
             console.log('Datos del huésped:', { ...formData });
             console.log('Fechas:', { startDate, endDate });
             console.log('Habitaciones reservadas:', nhabitaciones);
+
+
+// Reiniciar todos los estados
+setFormData({
+  nombreH: '',
+  apellidoH: '',
+  telefonoH: '',
+  emailH: '',
+  vehiculoH: false,
+  tipoH: '',
+  marcamodeloH: '',
+  colorH: '',
+  patenteH: ''
+});
+setSelectedDates([]);
+setDateRange('');
+setCurrentStep(1);
+setMetodoPago("");
+setFile(null);
+setFileChosen("Ningún archivo seleccionado");
+
+
+
+
+
+
+           ///////////// Lógica de envío a gmail
+
+            const formDataToSend = new FormData();
+          formDataToSend.append("to", "programacionprueba99@gmail.com");
+          formDataToSend.append("subject", "Nueva Reserva");
+          formDataToSend.append(
+              "text",
+              `Información de el Huesped; PAGO
+                  Nombre: ${formData.nombreH}
+                  Apellido: ${formData.apellidoH}
+                  Teléfono: ${formData.telefonoH}
+                  Email: ${formData.emailH}
+                  Pago: ${metodoPago}
+                  Estado del Pago: Pendiente
+        Habitaciones Reservadas: ${nhabitaciones}  
+                  Fecha de entrada: ${startDate}
+                  Fecha de salida: ${endDate}
+                  ${formData.vehiculoH ? `Vehículo: Sí` : `Vehículo: No`}
+                  ${formData.vehiculoH ? `Tipo de vehículo: ${formData.tipoH}` : ""}
+                  ${formData.vehiculoH ? `Marca y modelo: ${formData.marcamodeloH}` : ""}
+                  ${formData.vehiculoH ? `Color: ${formData.colorH}` : ""}
+                  ${formData.vehiculoH ? `Patente: ${formData.patenteH}` : ""}`
+          );
+            if (file) {
+              formDataToSend.append("attachment", file);
+          }
+
+            const response2 = await fetch(
+              "http://localhost:5000/api/email/send-email",
+              {
+                  method: "POST",
+                  body: formDataToSend,
+              }
+          );
+
+
+
         } catch (error) {
             console.error('Error en la solicitud:', error);
             setSuccessMessage('Error al enviar los datos'); 
@@ -537,11 +611,20 @@ function Formulario() {
     <i className="bi bi-cash-coin" style={{ fontSize: '2rem', color: 'white' }}></i>
   </div>
 </div>
-                            <CompPago formData={formData} nhabitaciones={nhabitaciones} start={start} end={end} />
-                            <button type="button" onClick={handleBack2}>
-                                Atrás
-                            </button>
                             
+                            <CompPago 
+    formData={formData} 
+    nhabiraciones={nhabitaciones} 
+    start={start} 
+    end={end}
+    metodoPago={metodoPago} 
+    setMetodoPago={setMetodoPago} 
+    handleFileChange={handleFileChange} 
+    fileChosen={fileChosen}
+/>
+<button type="button" onClick={handleBack2}>
+    Atrás
+</button>
                             
                             <button type="submit" onClick={handleSubmit}>
                                 Enviar
