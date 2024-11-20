@@ -71,20 +71,20 @@ const formController = {
           INSERT INTO solicitudes2 (nombreH, apellidoH, telefonoH, emailH, vehiculoH, tipoH, marcamodeloH, colorH, patenteH, nhabitaciones) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        connection.query(queryHuesped2, valuesHuesped, (errorHuesped2) => {
+        connection.query(queryHuesped2, valuesHuesped, (errorHuesped2,results) => {
           if (errorHuesped2) {
             return connection.rollback(() => {
               res.status(500).json({ message: 'Error al guardar los datos en solicitudes2' });
             });
           }
-
+          const idsolicitudes2 = results.insertId;
           // Insertar datos del pago
           const queryPago = `
-            INSERT INTO pagos (idsolicitud, estado, fecha_pago, tipo)
+            INSERT INTO pagos (idsolicitudes, estado, fecha_pago, tipo)
             VALUES (?, ?, ?, ?)
           `;
           const valuesPago = [
-            idsolicitud,
+            idsolicitudes2,
             false, // estado inicial como no pagado
             new Date(), // fecha actual
             metodoPago
